@@ -3,9 +3,6 @@
 #define ENGINE_APPLICATION_HPP_
 
 #include <filesystem>
-#include <memory>
-
-#include "tools/eventing/event.hpp"
 
 namespace Engine
 {

@@ -16,6 +16,7 @@ int main(int argc, char* argv[])
     catch (std::exception e)
     {
         Engine::Logs::Logger::PrintLog(std::string("EXCEPTION: ") + e.what(), Engine::Logs::ELogLevel::Error);
+        //std::cerr << e.what() << std::endl;
         return -1;
     }
 

@@ -21,12 +21,12 @@ mkdir -p $ScriptDir/../include
 mkdir -p $ScriptDir/../libs
 
 echo -e "\n============================================================================"
-echo -e "Start Building SDL2"
+echo -e "Start Building GLFW"
 echo -e "============================================================================\n"
 
-unzip -o $ScriptDir/SDL2-2.28.5.zip -d $ScriptDir/temp > /dev/null
+unzip -o $ScriptDir/glfw-3.3.8.zip -d $ScriptDir/temp > /dev/null
 
-cmake $ScriptDir/temp/SDL2-2.28.5 -B$ScriptDir/temp/SDL2-2.28.5/build \
+cmake $ScriptDir/temp/glfw-3.3.8 -B$ScriptDir/temp/glfw-3.3.8/build \
   -DSDL2_DISABLE_INSTALL=ON \
   -DSDL2_DISABLE_UNINSTALL=ON \
   -DSDL_TEST=OFF \
@@ -34,15 +34,35 @@ cmake $ScriptDir/temp/SDL2-2.28.5 -B$ScriptDir/temp/SDL2-2.28.5/build \
   -DSDL_STATIC=OFF \
   -DCMAKE_DEBUG_POSTFIX=""
 
-cmake --build $ScriptDir/temp/SDL2-2.28.5/build --config Release
+cmake --build $ScriptDir/temp/glfw-3.3.8/build --config Release
 
-cp -r $ScriptDir/temp/SDL2-2.28.5/build/include/ $ScriptDir/../include
-cp -r $ScriptDir/temp/SDL2-2.28.5/build/include-config-/ $ScriptDir/../include
-find $ScriptDir/temp/SDL2-2.28.5/build \( -name '*.lib' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs \;
-find $ScriptDir/temp/SDL2-2.28.5/build \( -name '*.pdb' -o -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
+cp -r $ScriptDir/temp/glfw-3.3.8/build/include/ $ScriptDir/../include
+cp -r $ScriptDir/temp/glfw-3.3.8/build/include-config-/ $ScriptDir/../include
+find $ScriptDir/temp/glfw-3.3.8/build \( -name '*.so' -o -name '*.dylib' -o \) -type f -exec cp '{}' $ScriptDir/../libs \;
+find $ScriptDir/temp/glfw-3.3.8/build \( -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
 
 echo -e "\n============================================================================"
-echo -e "Finish Building SDL2"
+echo -e "Finish Building GLFW"
+echo -e "============================================================================\n"
+
+echo -e "\n============================================================================"
+echo -e "Start Building GLEW"
+echo -e "============================================================================\n"
+
+unzip -o $ScriptDir/glew-2.2.0.zip -d $ScriptDir/temp > /dev/null
+
+cmake $ScriptDir/temp/glew-2.2.0/build/cmake -B$ScriptDir/temp/glew-2.2.0/new_build \
+    -DBUILD_UTILS=OFF \
+    -DBUILD_SHARED_LIBS=OFF
+
+cmake --build $ScriptDir/temp/glew-2.2.0/new_build --config Release
+
+cp -r $ScriptDir/temp/glew-2.2.0/include/ $ScriptDir/../include
+find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.so' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs \;
+find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
+
+echo -e "\n============================================================================"
+echo -e "Finish Building GLEW"
 echo -e "============================================================================\n"
 
 echo -e "\n============================================================================"

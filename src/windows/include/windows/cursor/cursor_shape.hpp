@@ -8,19 +8,12 @@ namespace Engine::Windows::Cursor
 {
     enum class ECursorShape
     {
-        Arrow,
-        IBeam,
-        Wait,
-        Crosshair,
-        WaitArrow,
-        SizeNWSE,
-        SizeNESW,
-        SizeWE,
-        SizeNS,
-        SizeAll,
-        No,
-        Hand,
-        System
+        Arrow     = 0x00036001,
+        IBeam     = 0x00036002,
+        CrossHair = 0x00036003,
+        Hand      = 0x00036004,
+        HResize   = 0x00036005,
+        VResize   = 0x00036006
     };
 }
 

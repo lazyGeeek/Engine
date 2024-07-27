@@ -12,14 +12,16 @@
 #include "mouse_button_state.hpp"
 #include "tools/eventing/event.hpp"
 #include "tools/services/service_interface.hpp"
-#include "windows/sdl2.hpp"
+#include "windows/cursor/cursor_mode.hpp"
+#include "windows/cursor/cursor_shape.hpp"
+#include "windows/glfw.hpp"
 
 namespace Engine::Windows::Inputs
 {
     class InputManager : public Tools::Services::IService
     {
     public:
-        InputManager(Windows::SDL2* window);
+        InputManager(Windows::GLFW* window);
         ~InputManager();
 
         InputManager(const InputManager& other)             = delete;
@@ -35,11 +37,10 @@ namespace Engine::Windows::Inputs
         bool IsMouseButtonPressed(EMouseButton button) const;
         bool IsMouseButtonReleased(EMouseButton button) const;
 
-        void SetMousePosition(glm::i32vec2 position) { SDL_WarpMouseInWindow(m_window->GetWindow(), position.x, position.y); }
-        glm::i32vec2 GetMousePosition() const;
+        void SetCursorPosition(glm::dvec2 position) { glfwSetCursorPos(m_window->GetWindow(), position.x, position.y); }
+        glm::dvec2 GetCursorPosition() const;
 
-        void ShowCursor(bool state) { SDL_ShowCursor(state ? SDL_ENABLE : SDL_DISABLE); }
-        void SetRelativeMouseMode(bool lock) { SDL_SetRelativeMouseMode(lock ? SDL_TRUE : SDL_FALSE); }
+        void SetCursorMode(Cursor::ECursorMode mode);
         void SetCursorShape(Cursor::ECursorShape cursor);
 
         void ClearEvents();
@@ -48,10 +49,12 @@ namespace Engine::Windows::Inputs
         Tools::Eventing::Event<EKey> KeyReleasedEvent;
         Tools::Eventing::Event<EMouseButton> MouseButtonPressedEvent;
         Tools::Eventing::Event<EMouseButton> MouseButtonReleasedEvent;
-        Tools::Eventing::Event<glm::i32vec2> CursorMoveEvent;
+        Tools::Eventing::Event<glm::dvec2> CursorMoveEvent;
 
     private:
-        Windows::SDL2* m_window = nullptr;
+        Windows::GLFW* m_window = nullptr;
+
+        std::unordered_map<Cursor::ECursorShape, GLFWcursor*> m_cursors;
     };
 }
 

@@ -8,28 +8,48 @@ New-Item -Path "$PSScriptRoot/" -Name "../libs" -ItemType Directory -Force
 
 try {
     Write-Output "`n============================================================================"
-    Write-Output "Start Building SDL2"
+    Write-Output "Start Building GLFW"
     Write-Output "============================================================================`n"
 
-    Expand-Archive "$PSScriptRoot/SDL2-2.28.5.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    Expand-Archive "$PSScriptRoot/glfw-3.3.8.zip" -Force -DestinationPath "$PSScriptRoot/temp"
 
-    cmake $PSScriptRoot/temp/SDL2-2.28.5 -B"$PSScriptRoot/temp/SDL2-2.28.5/build" `
-        -DSDL2_DISABLE_INSTALL=ON `
-        -DSDL2_DISABLE_UNINSTALL=ON `
-        -DSDL_TEST=OFF `
-        -DSDL_SHARED=ON `
-        -DSDL_STATIC=OFF `
+    cmake $PSScriptRoot/temp/glfw-3.3.8 -B"$PSScriptRoot/temp/glfw-3.3.8/build" `
+        -DGLFW_BUILD_EXAMPLES=OFF `
+        -DGLFW_BUILD_TESTS=OFF `
+        -DGLFW_BUILD_DOCS=OFF `
+        -DGLFW_INSTALL=OFF `
+        -DGLFW_VULKAN_STATIC=OFF `
+        -DBUILD_SHARED_LIBS=OFF `
         -DCMAKE_DEBUG_POSTFIX=""
 
-    cmake --build "$PSScriptRoot/temp/SDL2-2.28.5/build" --config Release
+    cmake --build "$PSScriptRoot/temp/glfw-3.3.8/build" --config Release
 
-    Copy-Item -Path "$PSScriptRoot/temp/SDL2-2.28.5/build/include/*" -Recurse -Destination "$PSScriptRoot/../include/" -Container -Force
-    Copy-Item -Path "$PSScriptRoot/temp/SDL2-2.28.5/build/include-config-release/*" -Recurse -Destination "$PSScriptRoot/../include/" -Container -Force
-    Get-ChildItem -Path "$PSScriptRoot/temp/SDL2-2.28.5/build/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
-    Get-ChildItem -Path "$PSScriptRoot/temp/SDL2-2.28.5/build/*" -Include *.pdb,*.dll -Recurse | Copy-Item -Destination "$PSScriptRoot/../bins/" -Force
+    Copy-Item -Path "$PSScriptRoot/temp/glfw-3.3.8/include/*" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/glfw-3.3.8/build/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/glfw-3.3.8/build/*" -Include *.pdb,*.dll -Recurse | Copy-Item -Destination "$PSScriptRoot/../bins/" -Force
 
     Write-Output "`n============================================================================"
-    Write-Output "Finish Building SDL2"
+    Write-Output "Finish Building GLFW"
+    Write-Output "============================================================================`n"
+
+    Write-Output "`n============================================================================"
+    Write-Output "Start Building GLEW"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/glew-2.2.0.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+
+    cmake $PSScriptRoot/temp/glew-2.2.0/build/cmake -B"$PSScriptRoot/temp/glew-2.2.0/new_build" `
+        -DBUILD_UTILS=OFF `
+        -DBUILD_SHARED_LIBS=OFF
+
+    cmake --build "$PSScriptRoot/temp/glew-2.2.0/new_build" --config Release
+
+    Copy-Item -Path "$PSScriptRoot/temp/glew-2.2.0/include/*" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/glew-2.2.0/new_build/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/glew-2.2.0/new_build/*" -Include *.pdb,*.dll -Recurse | Copy-Item -Destination "$PSScriptRoot/../bins/" -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Finish Building GLEW"
     Write-Output "============================================================================`n"
 
     Write-Output "`n============================================================================"

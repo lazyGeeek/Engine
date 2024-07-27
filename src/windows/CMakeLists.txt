@@ -10,7 +10,7 @@ file(
     "${CMAKE_SOURCE_DIR}/src/windows/include/windows/*.inl"
 )
 
-add_library(${ENGINE_WINDOWS_PROJECT} SHARED ${ENGINE_WINDOWS_CODE_LIST})
+add_library(${ENGINE_WINDOWS_PROJECT} STATIC ${ENGINE_WINDOWS_CODE_LIST})
 
 target_compile_features(${ENGINE_WINDOWS_PROJECT} PRIVATE cxx_std_17)
 target_include_directories(${ENGINE_WINDOWS_PROJECT} PRIVATE 
