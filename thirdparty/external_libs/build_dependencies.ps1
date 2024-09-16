@@ -4,6 +4,7 @@ Write-Output "==================================================================
 
 New-Item -Path "$PSScriptRoot/" -Name "../bins" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../include" -ItemType Directory -Force
+New-Item -Path "$PSScriptRoot/" -Name "../include/imgui" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../libs" -ItemType Directory -Force
 
 try {
@@ -58,6 +59,14 @@ try {
 
     Expand-Archive "$PSScriptRoot/glm-0.9.9.8.zip" -Force -DestinationPath "$PSScriptRoot/temp"
     Copy-Item -Path "$PSScriptRoot/temp/glm/glm" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Unpacking ImGui"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/imgui-1.90.1.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    Get-ChildItem -Path "$PSScriptRoot/temp/imgui-1.90.1/*" -Include *.c*,*.h* | Copy-Item -Destination "$PSScriptRoot/../include/imgui/" -Force
+    Copy-Item -Path "$PSScriptRoot/temp/imgui-1.90.1/backends/" -Recurse -Destination "$PSScriptRoot/../include/imgui/" -Force
 
 } catch {
     $_

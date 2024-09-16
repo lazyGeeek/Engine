@@ -8,7 +8,7 @@ file(
     "${CMAKE_SOURCE_DIR}/src/logs/include/logs/*.inl"
 )
 
-add_library(${ENGINE_LOGS_PROJECT} SHARED ${ENGINE_LOGS_CODE_LIST})
+add_library(${ENGINE_LOGS_PROJECT} STATIC ${ENGINE_LOGS_CODE_LIST})
 
 target_compile_features(${ENGINE_LOGS_PROJECT} PRIVATE cxx_std_17)
 target_include_directories(${ENGINE_LOGS_PROJECT} PRIVATE 

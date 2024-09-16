@@ -12,8 +12,8 @@ if(MSVC)
 endif()
 
 set(ENGINE_EXTERNAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/thirdparty/include)
-set(ENGINE_EXTERNAL_LIBS_DIR ${CMAKE_SOURCE_DIR}/thirdparty/libs)
 set(ENGINE_EXTERNAL_BINS_DIR ${CMAKE_SOURCE_DIR}/thirdparty/bins)
+set(ENGINE_EXTERNAL_LIBS_DIR ${CMAKE_SOURCE_DIR}/thirdparty/libs)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 set(CMAKE_DEBUG_POSTFIX "" CACHE BOOL "" FORCE)
@@ -48,7 +48,9 @@ endforeach ()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/engine)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/logs)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/renderer)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tools)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/ui)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/windows)
 
 # add_custom_command(TARGET ${ENGINE_ENGINE_PROJECT} POST_BUILD

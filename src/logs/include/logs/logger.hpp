@@ -18,7 +18,7 @@ namespace Engine::Logs
         Logger& operator=(const Logger& other)  = delete;
         Logger& operator=(const Logger&& other) = delete;
 
-        static void PrintLog(const std::string& message, ELogLevel logLevel);
+        static void PrintLog(const std::string& message, ELogLevel logLevel = ELogLevel::Info);
 
     private:
         static std::string getLogLevelOutput(ELogLevel logLevel = ELogLevel::Default);

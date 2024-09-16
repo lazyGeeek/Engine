@@ -14,12 +14,14 @@ target_compile_features(${ENGINE_ENGINE_PROJECT} PRIVATE cxx_std_17)
 target_include_directories(${ENGINE_ENGINE_PROJECT} PRIVATE 
     ${CMAKE_SOURCE_DIR}/src/engine/include
     ${CMAKE_SOURCE_DIR}/src/logs/include
+    ${CMAKE_SOURCE_DIR}/src/renderer/include
     ${CMAKE_SOURCE_DIR}/src/tools/include
+    ${CMAKE_SOURCE_DIR}/src/ui/include
     ${CMAKE_SOURCE_DIR}/src/windows/include
     ${ENGINE_EXTERNAL_INCLUDE_DIR}
     ${ENGINE_EXTERNAL_INCLUDE_DIR}/imgui
 )
-target_link_libraries(${ENGINE_ENGINE_PROJECT} Logs Tools Windows)
+target_link_libraries(${ENGINE_ENGINE_PROJECT} Logs Renderer Tools UI Windows)
 
 foreach(CODE_FILE IN ITEMS ${ENGINE_ENGINE_CODE_LIST})
     get_filename_component(CODE_FILE_PATH "${CODE_FILE}" PATH)
@@ -31,3 +33,7 @@ foreach(CODE_FILE IN ITEMS ${ENGINE_ENGINE_CODE_LIST})
     string(REPLACE "include/engine" "" GROUP_PATH "${GROUP_PATH}")
     source_group("${GROUP_PATH}" FILES "${CODE_FILE}")
 endforeach()
+
+add_custom_command(TARGET ${ENGINE_ENGINE_PROJECT} PRE_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_SOURCE_DIR}/thirdparty/engine/Configs $<TARGET_FILE_DIR:${ENGINE_ENGINE_PROJECT}>/Configs)
