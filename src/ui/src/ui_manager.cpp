@@ -15,7 +15,7 @@ namespace Engine::UI
 
         SetEditorLayoutSaveFilename(saveFile);
 
-        m_currentCanvas = std::make_unique<UI::Modules::Canvas>();
+        m_currentCanvas = std::make_shared<UI::Modules::Canvas>();
 
         ImGui_ImplGlfw_InitForOpenGL(Tools::Services::ServiceLocator::Get<Windows::GLFW>().GetWindow(), true);
         ImGui_ImplOpenGL3_Init(glslVersion.c_str());

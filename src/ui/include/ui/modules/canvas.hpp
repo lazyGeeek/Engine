@@ -15,8 +15,8 @@ namespace Engine::UI::Modules
     class Canvas : public IDrawable
     {
     public:
-        Canvas()                   = default;
-        virtual ~Canvas() override = default;
+        Canvas() = default;
+        virtual ~Canvas() override;
 
         Canvas(const Canvas& other)             = delete;
         Canvas(Canvas&& other)                  = delete;

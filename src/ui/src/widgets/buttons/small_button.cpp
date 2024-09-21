@@ -1,9 +1,10 @@
-#include "ui/widgets/buttons/button.hpp"
+#include "ui/widgets/buttons/small_button.hpp"
+
+#include "ui/internal/converter.hpp"
 
 namespace Engine::UI::Widgets::Buttons
 {
-    Button::Button(const std::string& label, const glm::vec2& size, bool enabled)
-        : m_size { Internal::Converter::ToImVec2(size) }
+    SmallButton::SmallButton(const std::string& label, bool enabled)
     {
         SetText(label);
         SetEnabled(enabled);
@@ -16,7 +17,7 @@ namespace Engine::UI::Widgets::Buttons
         m_textColor              = Internal::Converter::ToColor(style.Colors[ImGuiCol_Text]);
     }
 
-    void Button::DrawImpl()
+    void SmallButton::DrawImpl()
     {
         if (!m_enabled)
             return;
@@ -33,7 +34,7 @@ namespace Engine::UI::Widgets::Buttons
         style.Colors[ImGuiCol_ButtonActive]  = Internal::Converter::ToImVec4(m_clickedBackgroundColor);
         style.Colors[ImGuiCol_Text]          = Internal::Converter::ToImVec4(m_textColor);
 
-        if (ImGui::Button((m_label + m_widgetId).c_str(), m_size))
+        if (ImGui::SmallButton((m_label + m_widgetId).c_str()))
             ClickedEvent.Invoke();
 
         style.Colors[ImGuiCol_Button]        = defaultIdleColor;

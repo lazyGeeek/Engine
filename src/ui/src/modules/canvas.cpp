@@ -7,6 +7,11 @@
 
 namespace Engine::UI::Modules
 {
+    Canvas::~Canvas()
+    {
+        RemoveAllPanels();
+    }
+
     void Canvas::RemovePanel(std::shared_ptr<Panels::BasePanel> panel)
     {
         auto& it = std::remove_if(m_panels.begin(), m_panels.end(), [&panel](std::shared_ptr<Panels::BasePanel>& item)

@@ -1,11 +1,12 @@
-#include "ui/widgets/buttons/button.hpp"
+#include "ui/widgets/buttons/arrow_button.hpp"
+
+#include "ui/internal/converter.hpp"
 
 namespace Engine::UI::Widgets::Buttons
 {
-    Button::Button(const std::string& label, const glm::vec2& size, bool enabled)
-        : m_size { Internal::Converter::ToImVec2(size) }
+    ArrowButton::ArrowButton(EDirection direction, bool enabled)
+        : m_direction{ fromEDirection(direction) }
     {
-        SetText(label);
         SetEnabled(enabled);
 
         ImGuiStyle& style = ImGui::GetStyle();
@@ -16,7 +17,7 @@ namespace Engine::UI::Widgets::Buttons
         m_textColor              = Internal::Converter::ToColor(style.Colors[ImGuiCol_Text]);
     }
 
-    void Button::DrawImpl()
+    void ArrowButton::DrawImpl()
     {
         if (!m_enabled)
             return;
@@ -33,12 +34,44 @@ namespace Engine::UI::Widgets::Buttons
         style.Colors[ImGuiCol_ButtonActive]  = Internal::Converter::ToImVec4(m_clickedBackgroundColor);
         style.Colors[ImGuiCol_Text]          = Internal::Converter::ToImVec4(m_textColor);
 
-        if (ImGui::Button((m_label + m_widgetId).c_str(), m_size))
+        if (ImGui::ArrowButton(m_widgetId.c_str(), m_direction))
             ClickedEvent.Invoke();
 
         style.Colors[ImGuiCol_Button]        = defaultIdleColor;
         style.Colors[ImGuiCol_ButtonHovered] = defaultHoveredColor;
         style.Colors[ImGuiCol_ButtonActive]  = defaultClickedColor;
         style.Colors[ImGuiCol_Text]          = defaultTextColor;
+    }
+
+    ArrowButton::EDirection ArrowButton::fromImGuiDir(ImGuiDir direction)
+    {
+        switch (direction)
+        {
+            case ImGuiDir_Right:
+                return EDirection::Right;
+            case ImGuiDir_Up:
+                return EDirection::Up;
+            case ImGuiDir_Down:
+                return EDirection::Down;
+            case ImGuiDir_Left:
+            default:
+                return EDirection::Left;
+        }
+    }
+
+    ImGuiDir ArrowButton::fromEDirection(EDirection direction)
+    {
+        switch (direction)
+        {
+            case EDirection::Right:
+                return ImGuiDir_Right;
+            case EDirection::Up:
+                return ImGuiDir_Up;
+            case EDirection::Down:
+                return ImGuiDir_Down;
+            case EDirection::Left:
+            default:
+                return ImGuiDir_Left;
+        }
     }
 }
