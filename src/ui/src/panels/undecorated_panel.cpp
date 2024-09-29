@@ -9,6 +9,7 @@ namespace Engine::UI::Panels
         ImGuiStyle& style = ImGui::GetStyle();
         ImVec2 previousPadding = style.WindowPadding;
         ImVec2 previousMinSize = style.WindowMinSize;
+
         style.WindowPadding = { 0, 0 };
         style.WindowMinSize = { 0, 0 };
 
@@ -18,9 +19,7 @@ namespace Engine::UI::Panels
             style.WindowMinSize = previousMinSize;
 
             Update();
-
-            //DrawWidgets();
-            ImGui::Button("Button");
+            DrawWidgets();
 
             ImGui::End();
         }

@@ -14,10 +14,10 @@ namespace Engine::UI::Widgets::Buttons
     public:
         enum class EDirection
         {
-            Left = 0,
+            Left  = 0,
             Right = 1,
-            Up = 2,
-            Down = 3
+            Up    = 2,
+            Down  = 3
         };
 
         ArrowButton(EDirection direction = EDirection::Left, bool enabled = true);
