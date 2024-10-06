@@ -16,11 +16,12 @@ namespace Engine::UI::Widgets::Drags
 
     public:
         SingleDrag(
+            const std::string& label,
             T min, T max, T value,
-            float speed,
-            const std::string& label)
-            : m_min { min }, m_max { max }, m_value { value },
-              m_speed { speed }, m_label { label }
+            float speed)
+            : BaseWidget(label),
+              m_min { min }, m_max { max }, m_value { value },
+              m_speed { speed }
         {
             setFormat<T>();
         }
@@ -35,17 +36,15 @@ namespace Engine::UI::Widgets::Drags
         SingleDrag& operator=(const SingleDrag& other)  = delete;
         SingleDrag& operator=(const SingleDrag&& other) = delete;
 
-        virtual T GetMinValue()              const { return m_min; }
-        virtual T GetMaxValue()              const { return m_max; }
-        virtual T GetValue()                 const { return m_value; }
-        virtual float GetSpeed()             const { return m_speed; }
-        virtual const std::string& GetText() const { return m_label; }
+        virtual T GetMinValue()  const { return m_min; }
+        virtual T GetMaxValue()  const { return m_max; }
+        virtual T GetValue()     const { return m_value; }
+        virtual float GetSpeed() const { return m_speed; }
 
-        virtual void SetMinValue(T min)               { m_min = min; }
-        virtual void SetMaxValue(T max)               { m_max = max; }
-        virtual void SetValue(T value)                { m_value = value; }
-        virtual void SetSpeed(float speed)            { m_speed = speed; }
-        virtual void SetText(const std::string& text) { m_label = text; }
+        virtual void SetMinValue(T min)    { m_min = min; }
+        virtual void SetMaxValue(T max)    { m_max = max; }
+        virtual void SetValue(T value)     { m_value = value; }
+        virtual void SetSpeed(float speed) { m_speed = speed; }
 
         Tools::Eventing::Event<T> ValueChangedEvent;
 
@@ -80,7 +79,6 @@ namespace Engine::UI::Widgets::Drags
         T m_value;
 
         float m_speed        = 1.0f;
-        std::string m_label  = "";
         std::string m_format = "";
 
         ImGuiDataType m_dataType = ImGuiDataType_Float;

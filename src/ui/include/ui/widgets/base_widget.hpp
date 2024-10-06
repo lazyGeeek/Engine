@@ -13,7 +13,7 @@ namespace Engine::UI::Widgets
     class BaseWidget : public IDrawable
     {
     public:
-        BaseWidget();
+        BaseWidget(const std::string& label);
         virtual ~BaseWidget() = default;
 
         BaseWidget(const BaseWidget& other)             = delete;
@@ -22,20 +22,23 @@ namespace Engine::UI::Widgets
         BaseWidget& operator=(const BaseWidget&& other) = delete;
 
         virtual bool Draw() override;
-        void Destroy() { m_destroyed = true; }
+        virtual void Destroy() { m_destroyed = true; }
 
-        bool IsDestroyed() const { return m_destroyed; }
+        virtual bool IsDestroyed() const { return m_destroyed; }
 
-        bool HasParent() const       { return m_parent; }
-        WidgetContainer* GetParent() { return m_parent; }
+        virtual bool HasParent() const       { return m_parent; }
+        virtual WidgetContainer* GetParent() { return m_parent; }
 
-        const std::string& GetWidgetId() const { return m_widgetId; }
+        virtual const std::string& GetWidgetId() const { return m_widgetId; }
+        virtual const std::string& GetLabel()    const { return m_label; }
 
-        void SetEnabled(bool enabled)   { m_enabled = enabled; }
-        void SetSameLine(bool sameLine) { m_sameLine = sameLine; }
+        virtual void SetLabel(const std::string& text) { m_label = text; }
 
-        bool IsEnabled()  const { return m_enabled; }
-        bool IsSameLine() const { return m_sameLine; }
+        virtual void SetEnabled(bool enabled)   { m_enabled = enabled; }
+        virtual void SetSameLine(bool sameLine) { m_sameLine = sameLine; }
+
+        virtual bool IsEnabled()  const { return m_enabled; }
+        virtual bool IsSameLine() const { return m_sameLine; }
 
     protected:
         virtual void DrawImpl() = 0;
@@ -43,6 +46,7 @@ namespace Engine::UI::Widgets
         WidgetContainer* m_parent = nullptr;
 
         std::string m_widgetId = "";
+        std::string m_label    = "";
 
         bool m_enabled  = true;
         bool m_sameLine = false;

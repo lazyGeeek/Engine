@@ -10,7 +10,8 @@ namespace Engine::UI::Widgets::Buttons
     class BaseButton : public BaseWidget
     {
     public:
-        BaseButton()          = default;
+        BaseButton(const std::string& label) : BaseWidget(label) { }
+
         virtual ~BaseButton() = default;
 
         BaseButton(const BaseButton& other)             = delete;
@@ -23,14 +24,10 @@ namespace Engine::UI::Widgets::Buttons
         virtual const Types::Color& GetClickedBackgroundColor() const { return m_clickedBackgroundColor; }
         virtual const Types::Color& GetTextColor()              const { return m_textColor; }
 
-        virtual const std::string& GetText() const { return m_label; }
-
         virtual void SetIdleBackgroundColor(const Types::Color& color)    { m_idleBackgroundColor    = color; }
         virtual void SetHoveredBackgroundColor(const Types::Color& color) { m_hoveredBackgroundColor = color; }
         virtual void SetClickedBackgroundColor(const Types::Color& color) { m_clickedBackgroundColor = color; }
         virtual void SetTextColor(const Types::Color& color)              { m_textColor              = color; }
-
-        virtual void SetText(const std::string& text) { m_label = text; }
 
         Tools::Eventing::Event<> ClickedEvent;
 
@@ -41,8 +38,6 @@ namespace Engine::UI::Widgets::Buttons
         Types::Color m_hoveredBackgroundColor = Types::Color::Black;
         Types::Color m_clickedBackgroundColor = Types::Color::Black;
         Types::Color m_textColor              = Types::Color::Black;
-
-        std::string m_label = "";
     };
 }
 

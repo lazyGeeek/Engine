@@ -18,8 +18,7 @@ namespace Engine::UI::Widgets::Buttons
         ColoredButton(const std::string& label = "",
             const Types::Color& color = Types::Color::Black,
             const glm::vec2 size = glm::vec2(1.0f),
-            bool enableAlpha = true,
-            bool enabled = true);
+            bool enableAlpha = true);
 
         virtual ~ColoredButton() = default;
 
@@ -29,13 +28,11 @@ namespace Engine::UI::Widgets::Buttons
         ColoredButton& operator=(const ColoredButton&& other) = delete;
 
         const Types::Color& GetColor() const { return m_color; }
-        const std::string& GetText()   const { return m_label; }
         const glm::vec2& GetSize()     const { return Internal::Converter::ToGlmVec2(m_size); }
 
         bool IsAlphaEnabled() const { return m_isAlphaEnabled; }
 
         void SetColor(const Types::Color& color) { m_color = color; }
-        void SetText(const std::string& text)    { m_label = text; }
         void SetSize(const glm::vec2& size)      { m_size = Internal::Converter::ToImVec2(size); }
 
         bool EnableAlpha(bool enableAlpha) { m_isAlphaEnabled = enableAlpha; }
@@ -56,10 +53,9 @@ namespace Engine::UI::Widgets::Buttons
         Types::Color m_hoveredBackgroundColor = Types::Color::Black;
         Types::Color m_clickedBackgroundColor = Types::Color::Black;
 
-        std::string m_label      = "";
-        Types::Color m_color     = Types::Color::Black;
-        ImVec2 m_size            = ImVec2(1.0f, 1.0f);
-        bool m_isAlphaEnabled    = true;
+        Types::Color m_color  = Types::Color::Black;
+        ImVec2 m_size         = ImVec2(1.0f, 1.0f);
+        bool m_isAlphaEnabled = true;
     };
 }
 

@@ -20,7 +20,7 @@ namespace Engine::UI::Widgets::Buttons
             Down  = 3
         };
 
-        ArrowButton(EDirection direction = EDirection::Left, bool enabled = true);
+        ArrowButton(EDirection direction = EDirection::Left);
         virtual ~ArrowButton() = default;
 
         ArrowButton(const ArrowButton& other)             = delete;
@@ -39,12 +39,7 @@ namespace Engine::UI::Widgets::Buttons
         ImGuiDir fromEDirection(EDirection direction);
 
     private:
-        const std::string& GetText() const override { return m_label; }
-        void SetText(const std::string& text) override { }
-
         ImGuiDir m_direction = ImGuiDir_Left;
-
-        std::string m_label = "";
     };
 }
 

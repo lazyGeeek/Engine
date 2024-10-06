@@ -2,13 +2,14 @@
 
 #include <algorithm>
 
-namespace Utils = Engine::Tools::Utils;
-
-std::string Utils::PathParser::GetFileName(const std::filesystem::path& path)
+namespace Engine::Tools::Utils
 {
-    if (!path.has_filename())
-        return "";
+    std::string PathParser::GetFileName(const std::filesystem::path& path)
+    {
+        if (!path.has_filename())
+            return "";
 
-    std::filesystem::path filename = path.filename();
-    return filename.replace_extension("").string();
+        std::filesystem::path filename = path.filename();
+        return filename.replace_extension("").string();
+    }
 }

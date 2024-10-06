@@ -6,9 +6,9 @@
 namespace Engine::Logs
 {
     const std::string Logger::DEFAULT = "\033[0m";
-    const std::string Logger::CYAN = "\033[36m";
-    const std::string Logger::YELLOW = "\033[33m";
-    const std::string Logger::RED = "\033[31m";
+    const std::string Logger::CYAN    = "\033[36m";
+    const std::string Logger::YELLOW  = "\033[33m";
+    const std::string Logger::RED     = "\033[31m";
 
     void Logger::PrintLog(const std::string& message, ELogLevel logLevel)
     {
@@ -22,10 +22,10 @@ namespace Engine::Logs
         switch (logLevel)
         {
             case ELogLevel::Default: return "";
-            case ELogLevel::Info: return CYAN + "[Info] ";
+            case ELogLevel::Info:    return CYAN + "[Info] ";
             case ELogLevel::Warning: return YELLOW + "[Warning] ";
-            case ELogLevel::Error: return RED + "[Error] ";
-            default: return "[Uknown] ";
+            case ELogLevel::Error:   return RED + "[Error] ";
+            default:                 return "[Uknown] ";
         }
 
         return "[Unknown] ";

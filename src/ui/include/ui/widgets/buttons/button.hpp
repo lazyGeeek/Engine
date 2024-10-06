@@ -16,7 +16,7 @@ namespace Engine::UI::Widgets::Buttons
     class Button : public BaseButton
     {
     public:
-        Button(const std::string& label = "", const glm::vec2& size = glm::vec2(0.0f), bool enabled = true);
+        Button(const std::string& label = "", const glm::vec2& size = glm::vec2(0.0f));
         virtual ~Button() = default;
 
         Button(const Button& other)             = delete;

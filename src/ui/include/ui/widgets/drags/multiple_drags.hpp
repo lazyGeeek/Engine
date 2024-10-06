@@ -1,6 +1,6 @@
 #pragma once
-#ifndef ENGINE_UI_WIDGETS_DRAGS_MULTI_DRAG_HPP_
-#define ENGINE_UI_WIDGETS_DRAGS_MULTI_DRAG_HPP_
+#ifndef ENGINE_UI_WIDGETS_DRAGS_MULTIPLE_DRAGS_HPP_
+#define ENGINE_UI_WIDGETS_DRAGS_MULTIPLE_DRAGS_HPP_
 
 #include <array>
 
@@ -12,44 +12,43 @@
 namespace Engine::UI::Widgets::Drags
 {
     template <typename T, size_t Size>
-    class MultiDrag : public BaseWidget
+    class MultipleDrags : public BaseWidget
     {
-        static_assert(std::is_arithmetic<T>::value, "MultiDrag T should be arithmetic value");
-        static_assert(Size > 2, "MultiDrag number of elements shoulb be greater then 1");
+        static_assert(std::is_arithmetic<T>::value, "MultipleDrags T should be arithmetic value");
+        static_assert(Size > 2, "MultipleDrags number of elements shoulb be greater then 1");
 
     public:
-        MultiDrag(
+        MultipleDrags(
+            const std::string& label,
             T min, T max,
             const std::array<T, Size>& values,
-            float speed,
-            const std::string& label)
-            : m_min { min }, m_max { max }, m_values { values },
-              m_speed { speed }, m_label { label }
+            float speed)
+            : BaseWidget(label),
+              m_min { min }, m_max { max }, m_values { values },
+              m_speed { speed }
         {
             setFormat<T>();
         }
 
-        virtual ~MultiDrag()
+        virtual ~MultipleDrags()
         {
             ValueChangedEvent.RemoveAllListeners();
         }
 
-        MultiDrag(const MultiDrag& other)             = delete;
-        MultiDrag(MultiDrag&& other)                  = delete;
-        MultiDrag& operator=(const MultiDrag& other)  = delete;
-        MultiDrag& operator=(const MultiDrag&& other) = delete;
+        MultipleDrags(const MultipleDrags& other)             = delete;
+        MultipleDrags(MultipleDrags&& other)                  = delete;
+        MultipleDrags& operator=(const MultipleDrags& other)  = delete;
+        MultipleDrags& operator=(const MultipleDrags&& other) = delete;
 
-        virtual T GetMinValue()              const { return m_min; }
-        virtual T GetMaxValue()              const { return m_max; }
-        virtual float GetSpeed()             const { return m_speed; }
-        virtual const std::string& GetText() const { return m_label; }
+        virtual T GetMinValue()  const { return m_min; }
+        virtual T GetMaxValue()  const { return m_max; }
+        virtual float GetSpeed() const { return m_speed; }
 
         virtual const std::array<T, Size>& GetValues() const { return m_values; }
 
-        virtual void SetMinValue(T min)               { m_min = min; }
-        virtual void SetMaxValue(T max)               { m_max = max; }
-        virtual void SetSpeed(float speed)            { m_speed = speed; }
-        virtual void SetText(const std::string& text) { m_label = text; }
+        virtual void SetMinValue(T min)    { m_min = min; }
+        virtual void SetMaxValue(T max)    { m_max = max; }
+        virtual void SetSpeed(float speed) { m_speed = speed; }
 
         virtual void SetValues(const std::array<T, Size>& values) { m_values = values; }
 
@@ -74,13 +73,13 @@ namespace Engine::UI::Widgets::Drags
                 ValueChangedEvent.Invoke(m_values);
         }
 
-        T m_min;
-        T m_max;
         std::array<T, Size> m_values;
 
+        T m_min;
+        T m_max;
+
         float m_speed        = 1.0f;
-        std::string m_label  = "";
-        std::string m_format = "";
+        std::string m_format = "%.3f";
 
         ImGuiDataType m_dataType = ImGuiDataType_Float;
 
@@ -91,7 +90,7 @@ namespace Engine::UI::Widgets::Drags
             std::string name = typeid(T).name();
 
             if (name == "bool")
-                throw std::runtime_error("MultiDrag doesn't support bool value");
+                throw std::runtime_error("MultipleDrags doesn't support bool value");
 
             if (name == "float")
             {
@@ -163,7 +162,7 @@ namespace Engine::UI::Widgets::Drags
                 return;
             }
 
-            throw std::runtime_error("MultiDrag unsupported format");
+            throw std::runtime_error("MultipleDrags unsupported format");
         }
     };
 }

@@ -13,8 +13,6 @@ namespace Engine::Renderer
     {
         initGlew();
 
-        //m_isActive = true;
-
         if (debug)
         {
             GLint flags;

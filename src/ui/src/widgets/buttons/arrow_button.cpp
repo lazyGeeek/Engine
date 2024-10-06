@@ -4,11 +4,9 @@
 
 namespace Engine::UI::Widgets::Buttons
 {
-    ArrowButton::ArrowButton(EDirection direction, bool enabled)
-        : m_direction{ fromEDirection(direction) }
+    ArrowButton::ArrowButton(EDirection direction)
+        : BaseButton(""), m_direction { fromEDirection(direction) }
     {
-        SetEnabled(enabled);
-
         ImGuiStyle& style = ImGui::GetStyle();
 
         m_idleBackgroundColor    = Internal::Converter::ToColor(style.Colors[ImGuiCol_Button]);

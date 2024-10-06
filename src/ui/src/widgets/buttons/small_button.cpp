@@ -4,11 +4,9 @@
 
 namespace Engine::UI::Widgets::Buttons
 {
-    SmallButton::SmallButton(const std::string& label, bool enabled)
+    SmallButton::SmallButton(const std::string& label)
+        : BaseButton(label)
     {
-        SetText(label);
-        SetEnabled(enabled);
-
         ImGuiStyle& style = ImGui::GetStyle();
 
         m_idleBackgroundColor    = Internal::Converter::ToColor(style.Colors[ImGuiCol_Button]);

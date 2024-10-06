@@ -2,12 +2,9 @@
 
 namespace Engine::UI::Widgets::Buttons
 {
-    Button::Button(const std::string& label, const glm::vec2& size, bool enabled)
-        : m_size { Internal::Converter::ToImVec2(size) }
+    Button::Button(const std::string& label, const glm::vec2& size)
+        : BaseButton(label), m_size { Internal::Converter::ToImVec2(size) }
     {
-        SetText(label);
-        SetEnabled(enabled);
-
         ImGuiStyle& style = ImGui::GetStyle();
 
         m_idleBackgroundColor    = Internal::Converter::ToColor(style.Colors[ImGuiCol_Button]);

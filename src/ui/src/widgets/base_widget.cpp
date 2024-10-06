@@ -4,7 +4,8 @@
 
 namespace Engine::UI::Widgets
 {
-    BaseWidget::BaseWidget()
+    BaseWidget::BaseWidget(const std::string& label)
+        : m_label { label }
     {
         m_widgetId = "##" + std::to_string(m_id++);
     }

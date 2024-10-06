@@ -1,17 +1,18 @@
 #include "tools/utils/random.hpp"
 
-namespace Utils = Engine::Tools::Utils;
-
-std::default_random_engine Utils::Random::m_generator;
-
-int Utils::Random::GetInt(int min, int max)
+namespace Engine::Tools::Utils
 {
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(m_generator);
-}
+    std::default_random_engine Random::m_generator;
 
-float Utils::Random::GetFloat(float min, float max)
-{
-    std::uniform_real_distribution<float> distribution(min, max);
-    return distribution(m_generator);
+    int Random::GetInt(int min, int max)
+    {
+        std::uniform_int_distribution<int> distribution(min, max);
+        return distribution(m_generator);
+    }
+
+    float Random::GetFloat(float min, float max)
+    {
+        std::uniform_real_distribution<float> distribution(min, max);
+        return distribution(m_generator);
+    }
 }

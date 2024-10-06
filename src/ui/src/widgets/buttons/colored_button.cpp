@@ -2,14 +2,12 @@
 
 namespace Engine::UI::Widgets::Buttons
 {
-    ColoredButton::ColoredButton(const std::string& label, const Types::Color& color, const glm::vec2 size, bool enableAlpha, bool enabled)
-        : m_color { color },
+    ColoredButton::ColoredButton(const std::string& label, const Types::Color& color, const glm::vec2 size, bool enableAlpha)
+        : BaseButton(label),
+          m_color { color },
           m_size { Internal::Converter::ToImVec2(size) },
           m_isAlphaEnabled { enableAlpha }
     {
-        SetText(label);
-        SetEnabled(enabled);
-
         ImGuiStyle& style = ImGui::GetStyle();
 
         m_textColor = Internal::Converter::ToColor(style.Colors[ImGuiCol_Text]);

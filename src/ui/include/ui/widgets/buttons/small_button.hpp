@@ -12,7 +12,7 @@ namespace Engine::UI::Widgets::Buttons
     class SmallButton : public BaseButton
     {
     public:
-        SmallButton(const std::string& label = "", bool enabled = true);
+        SmallButton(const std::string& label = "");
         virtual ~SmallButton() = default;
 
         SmallButton(const SmallButton& other)             = delete;
