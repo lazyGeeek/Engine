@@ -5,6 +5,7 @@ Write-Output "==================================================================
 New-Item -Path "$PSScriptRoot/" -Name "../bins" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../include" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../include/imgui" -ItemType Directory -Force
+New-Item -Path "$PSScriptRoot/" -Name "../include/nvapi" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../libs" -ItemType Directory -Force
 
 try {
@@ -67,6 +68,14 @@ try {
     Expand-Archive "$PSScriptRoot/imgui-1.90.1.zip" -Force -DestinationPath "$PSScriptRoot/temp"
     Get-ChildItem -Path "$PSScriptRoot/temp/imgui-1.90.1/*" -Include *.c*,*.h* | Copy-Item -Destination "$PSScriptRoot/../include/imgui/" -Force
     Copy-Item -Path "$PSScriptRoot/temp/imgui-1.90.1/backends/" -Recurse -Destination "$PSScriptRoot/../include/imgui/" -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Unpacking NvAPI"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/NvAPI.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    Get-ChildItem -Path "$PSScriptRoot/temp/nvapi-main/*" -Include *.c*,*.h* | Copy-Item -Destination "$PSScriptRoot/../include/nvapi/" -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/nvapi-main/amd64/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
 
 } catch {
     $_

@@ -8,6 +8,8 @@
 #include "ui/ui_manager.hpp"
 #include "windows/glfw.hpp"
 
+#include "hardware_info/profiler_panel.hpp"
+
 namespace Engine
 {
     Application::Application(std::filesystem::path projectPath)
@@ -41,6 +43,13 @@ namespace Engine
         UI::UIManager& uiManager = Tools::Services::ServiceLocator::Get<UI::UIManager>();
         Renderer::OpenGL& renderer = Tools::Services::ServiceLocator::Get<Renderer::OpenGL>();
         UI::UIManager& manager = Tools::Services::ServiceLocator::Get<UI::UIManager>();
+
+        std::shared_ptr<UI::Modules::Canvas> canvas = std::make_shared<UI::Modules::Canvas>();
+        canvas->SetDockspace(true);
+        manager.SetCanvas(canvas);
+
+        std::shared_ptr<HardwareInfo::ProfilerPanel> profiler = canvas->AddPanel<HardwareInfo::ProfilerPanel>();
+        profiler->SetSize(glm::vec2(300.0f, 500.0f));
 
         while (IsRunning())
         {

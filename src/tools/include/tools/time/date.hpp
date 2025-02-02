@@ -15,50 +15,36 @@ namespace Engine::Tools::Time
 
         static inline std::string GetDate()
         {
-            std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            std::tm* time = std::localtime(&now);
+            tm timeInfo = getTimeInfo();
+            char result[20];
+            size_t size = std::strftime(result, sizeof(result), "%Y-%m-%d", &timeInfo);
+            std::string timestamp(result, size);
 
-            std::string day = std::to_string(time->tm_mday);
-
-            if (day.size() < 2)
-                day = "0" + day;
-
-            std::string mon = std::to_string(1 + time->tm_mon);
-
-            if (mon.size() < 2)
-                mon = "0" + mon;
-
-            std::string year = std::to_string(1900 + time->tm_year);
-
-            return day + "-" + mon + "-" + year;
+            return timestamp;
         }
 
         static inline std::string GetTime()
         {
-            std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            std::tm* time = std::localtime(&now);
+            tm timeInfo = getTimeInfo();
+            char result[20];
+            size_t size = std::strftime(result, sizeof(result), "%H:%M:%S", &timeInfo);
+            std::string timestamp(result, size);
 
-            std::string hour = std::to_string(time->tm_hour);
-
-            if (hour.size() < 2)
-                hour = "0" + hour;
-
-            std::string min = std::to_string(time->tm_min);
-
-            if (min.size() < 2)
-                min = "0" + min;
-
-            std::string sec = std::to_string(time->tm_sec);
-
-            if (sec.size() < 2)
-                sec = "0" + sec;
-
-            return hour + ":" + min + ":" + sec;
+            return timestamp;
         }
 
         static inline std::string GetDateAndTime()
         {
             return GetDate() + " " + GetTime();
+        }
+
+    private:
+        static inline tm getTimeInfo()
+        {
+            std::time_t currentTime = std::time(nullptr);
+            tm timeInfo;
+            localtime_s(&timeInfo, &currentTime);
+            return timeInfo;
         }
     };
 }

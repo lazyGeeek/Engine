@@ -53,6 +53,10 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/tools)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/ui)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/windows)
 
+if(WIN32)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/src/hardware_info)
+endif()
+
 # add_custom_command(TARGET ${ENGINE_ENGINE_PROJECT} POST_BUILD
 #                     COMMAND ${CMAKE_COMMAND} -E copy_directory
 #                         ${CMAKE_SOURCE_DIR}/src/opengl/shaders $<TARGET_FILE_DIR:${ENGINE_ENGINE_PROJECT}>/opengl/shaders)

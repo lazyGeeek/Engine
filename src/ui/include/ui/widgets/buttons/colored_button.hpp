@@ -33,7 +33,7 @@ namespace Engine::UI::Widgets::Buttons
         bool IsAlphaEnabled() const { return m_isAlphaEnabled; }
 
         void SetColor(const Types::Color& color) { m_color = color; }
-        void SetSize(const glm::vec2& size)      { m_size = Internal::Converter::ToImVec2(size); }
+        void SetSize(const glm::vec2& size)      { m_size  = Internal::Converter::ToImVec2(size); }
 
         bool EnableAlpha(bool enableAlpha) { m_isAlphaEnabled = enableAlpha; }
 

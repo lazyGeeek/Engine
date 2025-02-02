@@ -41,8 +41,8 @@ namespace Engine::UI::Widgets::Drags
         virtual T GetValue()     const { return m_value; }
         virtual float GetSpeed() const { return m_speed; }
 
-        virtual void SetMinValue(T min)    { m_min = min; }
-        virtual void SetMaxValue(T max)    { m_max = max; }
+        virtual void SetMinValue(T min)    { m_min   = min; }
+        virtual void SetMaxValue(T max)    { m_max   = max; }
         virtual void SetValue(T value)     { m_value = value; }
         virtual void SetSpeed(float speed) { m_speed = speed; }
 
