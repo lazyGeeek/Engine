@@ -43,14 +43,14 @@ namespace Engine::UI
         if (style == UI::Styling::EStyle::CustomDark)
         {
             newStyle->WindowPadding     = ImVec2(15, 15);
-            newStyle->WindowRounding    = 0.0f;
+            newStyle->WindowRounding    = 3.0f;
             newStyle->FramePadding      = ImVec2(5, 5);
-            newStyle->FrameRounding     = 0.0f;
+            newStyle->FrameRounding     = 3.0f;
             newStyle->ItemSpacing       = ImVec2(12, 8);
             newStyle->ItemInnerSpacing  = ImVec2(8, 6);
             newStyle->IndentSpacing     = 25.0f;
             newStyle->ScrollbarSize     = 15.0f;
-            newStyle->ScrollbarRounding = 0.0f;
+            newStyle->ScrollbarRounding = 5.0f;
             newStyle->GrabMinSize       = 5.0f;
             newStyle->GrabRounding      = 0.0f;
             newStyle->TabRounding       = 0.0f;
@@ -60,7 +60,7 @@ namespace Engine::UI
             newStyle->WindowBorderSize = 1.0f;
             newStyle->FrameBorderSize  = 0.0f;
             newStyle->PopupBorderSize  = 1.0f;
-    
+
             ImVec4* colors = ImGui::GetStyle().Colors;
             colors[ImGuiCol_Text]                  = ImVec4(0.96f, 0.96f, 0.99f, 1.00f);
             colors[ImGuiCol_TextDisabled]          = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);

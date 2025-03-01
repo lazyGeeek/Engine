@@ -17,7 +17,7 @@ namespace Engine::UI::Widgets::Buttons
     public:
         ColoredButton(const std::string& label = "",
             const Types::Color& color = Types::Color::Black,
-            const glm::vec2 size = glm::vec2(1.0f),
+            const glm::vec2 size = glm::vec2(0.0f),
             bool enableAlpha = true);
 
         virtual ~ColoredButton() = default;
@@ -41,20 +41,20 @@ namespace Engine::UI::Widgets::Buttons
         virtual void DrawImpl() override;
 
     private:
-        const Types::Color& GetIdleBackgroundColor()    const override { return m_idleBackgroundColor; }
+        const Types::Color& GetBackgroundColor()        const override { return m_backgroundColor; }
         const Types::Color& GetHoveredBackgroundColor() const override { return m_hoveredBackgroundColor; }
-        const Types::Color& GetClickedBackgroundColor() const override { return m_clickedBackgroundColor; }
+        const Types::Color& GetActiveBackgroundColor()  const override { return m_activeBackgroundColor; }
 
-        void SetIdleBackgroundColor(const Types::Color& color)    override { }
+        void SetBackgroundColor(const Types::Color& color)        override { }
         void SetHoveredBackgroundColor(const Types::Color& color) override { }
-        void SetClickedBackgroundColor(const Types::Color& color) override { }
+        void SetActiveBackgroundColor(const Types::Color& color)  override { }
 
-        Types::Color m_idleBackgroundColor    = Types::Color::Black;
+        Types::Color m_backgroundColor    = Types::Color::Black;
         Types::Color m_hoveredBackgroundColor = Types::Color::Black;
-        Types::Color m_clickedBackgroundColor = Types::Color::Black;
+        Types::Color m_activeBackgroundColor = Types::Color::Black;
 
         Types::Color m_color  = Types::Color::Black;
-        ImVec2 m_size         = ImVec2(1.0f, 1.0f);
+        ImVec2 m_size         = ImVec2(0.0f, 0.0f);
         bool m_isAlphaEnabled = true;
     };
 }

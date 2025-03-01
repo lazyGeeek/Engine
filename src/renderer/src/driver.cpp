@@ -77,10 +77,10 @@ namespace Engine::Renderer
 
         switch (severity)
         {
-            case GL_DEBUG_SEVERITY_HIGH:            Logs::Logger::PrintLog(output, Logs::ELogLevel::Error);   break;
-            case GL_DEBUG_SEVERITY_MEDIUM:          Logs::Logger::PrintLog(output, Logs::ELogLevel::Warning); break;
-            case GL_DEBUG_SEVERITY_LOW:             Logs::Logger::PrintLog(output, Logs::ELogLevel::Info);    break;
-            case GL_DEBUG_SEVERITY_NOTIFICATION:    Logs::Logger::PrintLog(output, Logs::ELogLevel::Info);    break;
+            case GL_DEBUG_SEVERITY_HIGH:            LOG_ERROR(output.c_str())   break;
+            case GL_DEBUG_SEVERITY_MEDIUM:          LOG_WARNING(output.c_str()) break;
+            case GL_DEBUG_SEVERITY_LOW:             LOG_INFO(output.c_str())    break;
+            case GL_DEBUG_SEVERITY_NOTIFICATION:    LOG_INFO(output.c_str())    break;
         }
     }
 
@@ -88,10 +88,6 @@ namespace Engine::Renderer
     {
         const GLenum error = glewInit();
         if (error != GLEW_OK)
-        {
-            std::string message = "Error Init GLEW: ";
-            std::string glewError = reinterpret_cast<const char*>(glewGetErrorString(error));
-            Logs::Logger::PrintLog(message + glewError, Logs::ELogLevel::Error);
-        }
+            LOG_ERROR("Error Init GLEW: %s", reinterpret_cast<const char*>(glewGetErrorString(error)))
     }
 }

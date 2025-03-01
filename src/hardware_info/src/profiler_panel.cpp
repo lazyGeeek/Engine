@@ -16,6 +16,12 @@
 typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::duration<float, std::milli> Duration;
 
+using UIPlotLines   = Engine::UI::Widgets::Plots::PlotLines;
+using UIText        = Engine::UI::Widgets::Texts::Text;
+using UITextPtr     = std::shared_ptr<UIText>;
+using UITreeNode    = Engine::UI::Widgets::Layouts::TreeNode;
+using UITreeNodePtr = std::shared_ptr<UITreeNode>;
+
 namespace Engine::HardwareInfo
 {
     ProfilerPanel::ProfilerPanel()
@@ -24,13 +30,13 @@ namespace Engine::HardwareInfo
         m_initHardwareInfoThread = std::thread(&ProfilerPanel::initHardwareInfo, this);
         m_calculateHardwareInfoThread = std::thread(&ProfilerPanel::calculateHardwareInfo, this);
 
-        m_cpuUsagePlot = CreateWidget<UI::Widgets::Plots::PlotLines>("CPU Usage %", "", 50,
+        m_cpuUsagePlot = CreateWidget<UIPlotLines>("CPU Usage %", "", 50,
             0.0f, 100.0f, glm::vec2(0.0f, 75.0f));
 
-        m_ramUsagePlot = CreateWidget<UI::Widgets::Plots::PlotLines>("RAM Usage %", "", 50,
+        m_ramUsagePlot = CreateWidget<UIPlotLines>("RAM Usage %", "", 50,
             0.0f, 100.0f, glm::vec2(0.0f, 75.0f));
 
-        m_gpuUsagePlot = CreateWidget<UI::Widgets::Plots::PlotLines>("GPU Usage %", "", 50,
+        m_gpuUsagePlot = CreateWidget<UIPlotLines>("GPU Usage %", "", 50,
             0.0f, 100.0f, glm::vec2(0.0f, 75.0f));
     }
 
@@ -58,91 +64,91 @@ namespace Engine::HardwareInfo
 
         if (cpuInfo.has_value())
         {
-            m_cpuInfoTree = CreateWidget<UI::Widgets::Layouts::TreeNode>("CPU Info");
+            m_cpuInfoTree = CreateWidget<UITreeNode>("CPU Info");
 
             CPUInfo& info = cpuInfo.value();
 
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Name: " + info.Name);
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Max Clock Speed: " + std::to_string(info.MaxClockSpeed) + "MHz");
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Current Clock Speed: " + std::to_string(info.CurrentClockSpeed) + " MHz");
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("L2 Cache Size: " + std::to_string(info.L2CacheSize / 1024) + " KB");
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("L3 Cache Size: " + std::to_string(info.L3CacheSize / 1024) + " KB");
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Number Of Cores: " + std::to_string(info.NumberOfCores));
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Number Of Enabled Core: " + std::to_string(info.NumberOfEnabledCore));
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Number Of Logical Processors: " + std::to_string(info.NumberOfLogicalProcessors));
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Thread Count: " + std::to_string(info.ThreadCount));
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>("Address Width: " + std::to_string(info.AddressWidth));
+            m_cpuInfoTree->CreateWidget<UIText>("Name: "                         + info.Name);
+            m_cpuInfoTree->CreateWidget<UIText>("Max Clock Speed: "              + std::to_string(info.MaxClockSpeed) + "MHz");
+            m_cpuInfoTree->CreateWidget<UIText>("Current Clock Speed: "          + std::to_string(info.CurrentClockSpeed) + " MHz");
+            m_cpuInfoTree->CreateWidget<UIText>("L2 Cache Size: "                + std::to_string(info.L2CacheSize / 1024) + " KB");
+            m_cpuInfoTree->CreateWidget<UIText>("L3 Cache Size: "                + std::to_string(info.L3CacheSize / 1024) + " KB");
+            m_cpuInfoTree->CreateWidget<UIText>("Number Of Cores: "              + std::to_string(info.NumberOfCores));
+            m_cpuInfoTree->CreateWidget<UIText>("Number Of Enabled Core: "       + std::to_string(info.NumberOfEnabledCore));
+            m_cpuInfoTree->CreateWidget<UIText>("Number Of Logical Processors: " + std::to_string(info.NumberOfLogicalProcessors));
+            m_cpuInfoTree->CreateWidget<UIText>("Thread Count: "                 + std::to_string(info.ThreadCount));
+            m_cpuInfoTree->CreateWidget<UIText>("Address Width: "                + std::to_string(info.AddressWidth));
 
             std::string text = "Virtualization Firmware Enabled: ";
             text += info.VirtualizationFirmwareEnabled ? "True" : "False";
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>(text);
+            m_cpuInfoTree->CreateWidget<UIText>(text);
 
             text = "VM Monitor Mode Extensions: ";
             text += info.VMMonitorModeExtensions ? "True" : "False";
-            m_cpuInfoTree->CreateWidget<UI::Widgets::Texts::Text>(text);
+            m_cpuInfoTree->CreateWidget<UIText>(text);
         }
         else
-            Logs::Logger::PrintLog("Can't get CPU Info", Logs::ELogLevel::Error);
+            LOG_ERROR("Can't get CPU Info")
 
         std::optional<std::list<GPUInfo>> gpuInfo = HardwareInfo::WMIWrapper::GetGPUInfo();
 
         if (gpuInfo.has_value())
         {
-            m_gpuInfoTree = CreateWidget<UI::Widgets::Layouts::TreeNode>("GPU Info");
+            m_gpuInfoTree = CreateWidget<UITreeNode>("GPU Info");
 
             int counter = 0;
             for (GPUInfo& info : gpuInfo.value())
             {
                 ++counter;
-                std::shared_ptr<UI::Widgets::Layouts::TreeNode> gpuTree = m_gpuInfoTree->CreateWidget<UI::Widgets::Layouts::TreeNode>("GPU " + std::to_string(counter));
+                UITreeNodePtr gpuTree = m_gpuInfoTree->CreateWidget<UITreeNode>("GPU " + std::to_string(counter));
 
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Name: " + info.Name);
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Device ID: " + info.DeviceID);
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Driver Version: " + info.DriverVersion);
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Current Horizontal Resolution: " + std::to_string(info.CurrentHorizontalResolution));
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Current Vertical Resolution: " + std::to_string(info.CurrentVerticalResolution));
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("CurrentRefreshRate: " + std::to_string(info.CurrentRefreshRate));
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Max Refresh Rate: " + std::to_string(info.MaxRefreshRate));
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Min Refresh Rate: " + std::to_string(info.MinRefreshRate));
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Current Bits Per Pixel: " + std::to_string(info.CurrentBitsPerPixel));
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Current Number Of Colors: " + info.CurrentNumberOfColors);
+                gpuTree->CreateWidget<UIText>("Name: "                          + info.Name);
+                gpuTree->CreateWidget<UIText>("Device ID: "                     + info.DeviceID);
+                gpuTree->CreateWidget<UIText>("Driver Version: "                + info.DriverVersion);
+                gpuTree->CreateWidget<UIText>("Current Horizontal Resolution: " + std::to_string(info.CurrentHorizontalResolution));
+                gpuTree->CreateWidget<UIText>("Current Vertical Resolution: "   + std::to_string(info.CurrentVerticalResolution));
+                gpuTree->CreateWidget<UIText>("CurrentRefreshRate: "            + std::to_string(info.CurrentRefreshRate));
+                gpuTree->CreateWidget<UIText>("Max Refresh Rate: "              + std::to_string(info.MaxRefreshRate));
+                gpuTree->CreateWidget<UIText>("Min Refresh Rate: "              + std::to_string(info.MinRefreshRate));
+                gpuTree->CreateWidget<UIText>("Current Bits Per Pixel: "        + std::to_string(info.CurrentBitsPerPixel));
+                gpuTree->CreateWidget<UIText>("Current Number Of Colors: "      + info.CurrentNumberOfColors);
 
                 std::string text = "Monochrome: ";
                 text += info.Monochrome ? "True" : "False";
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>(text);
+                gpuTree->CreateWidget<UIText>(text);
 
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("Installed Display Drivers: " + info.InstalledDisplayDrivers);
-                gpuTree->CreateWidget<UI::Widgets::Texts::Text>("PNP Device ID: " + info.PNPDeviceID);
+                gpuTree->CreateWidget<UIText>("Installed Display Drivers: " + info.InstalledDisplayDrivers);
+                gpuTree->CreateWidget<UIText>("PNP Device ID: " + info.PNPDeviceID);
             }
         }
         else
-            Logs::Logger::PrintLog("Can't get GPU Info", Logs::ELogLevel::Error);
+            LOG_ERROR("Can't get GPU Info")
 
         std::optional<std::list<RAMInfo>> ramInfo = HardwareInfo::WMIWrapper::GetRAMInfo();
 
         if (ramInfo.has_value())
         {
-            m_ramInfoTree = CreateWidget<UI::Widgets::Layouts::TreeNode>("RAM Info");
+            m_ramInfoTree = CreateWidget<UITreeNode>("RAM Info");
 
             int counter = 0;
             for (RAMInfo& info : ramInfo.value())
             {
                 ++counter;
-                std::shared_ptr<UI::Widgets::Layouts::TreeNode> ramTree = m_ramInfoTree->CreateWidget<UI::Widgets::Layouts::TreeNode>("RAM " + std::to_string(counter));
+                UITreeNodePtr ramTree = m_ramInfoTree->CreateWidget<UITreeNode>("RAM " + std::to_string(counter));
 
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Manufacturer: " + info.Manufacturer);
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Part Number: " + info.PartNumber);
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Device Locator: " + info.DeviceLocator);
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Capacity: " + info.Capacity + " KB");
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Speed: " + std::to_string(info.Speed));
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Configured Clock Speed: " + std::to_string(info.ConfiguredClockSpeed));
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Configured Voltage: " + std::to_string(info.ConfiguredVoltage) + " V");
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Min Voltage: " + std::to_string(info.MinVoltage) + " V");
-                ramTree->CreateWidget<UI::Widgets::Texts::Text>("Max Voltage: " + std::to_string(info.MaxVoltage) + " V");
+                ramTree->CreateWidget<UIText>("Manufacturer: "           + info.Manufacturer);
+                ramTree->CreateWidget<UIText>("Part Number: "            + info.PartNumber);
+                ramTree->CreateWidget<UIText>("Device Locator: "         + info.DeviceLocator);
+                ramTree->CreateWidget<UIText>("Capacity: "               + info.Capacity + " KB");
+                ramTree->CreateWidget<UIText>("Speed: "                  + std::to_string(info.Speed));
+                ramTree->CreateWidget<UIText>("Configured Clock Speed: " + std::to_string(info.ConfiguredClockSpeed));
+                ramTree->CreateWidget<UIText>("Configured Voltage: "     + std::to_string(info.ConfiguredVoltage) + " V");
+                ramTree->CreateWidget<UIText>("Min Voltage: "            + std::to_string(info.MinVoltage) + " V");
+                ramTree->CreateWidget<UIText>("Max Voltage: "            + std::to_string(info.MaxVoltage) + " V");
             }
         }
         else
-            Logs::Logger::PrintLog("Can't get RAM Info", Logs::ELogLevel::Error);
+            LOG_ERROR("Can't get RAM Info")
     }
 
     void ProfilerPanel::calculateHardwareInfo()
@@ -171,7 +177,7 @@ namespace Engine::HardwareInfo
                     calculateCPULoad(fileTimeToInt64(idleTime), fileTimeToInt64(kernelTime) + fileTimeToInt64(userTime)) : 0.0f;
 
                 m_cpuUsagePlot->AddSample(cpuLoad * 100.0f);
-                m_cpuUsagePlot->SetLabel("RAM Usage: " + std::to_string(static_cast<int>(cpuLoad * 100.0f)) + "%");
+                m_cpuUsagePlot->SetLabel("CPU Usage: " + std::to_string(static_cast<int>(cpuLoad * 100.0f)) + "%");
 
                 MEMORYSTATUSEX memInfo;
                 memInfo.dwLength = sizeof(MEMORYSTATUSEX);

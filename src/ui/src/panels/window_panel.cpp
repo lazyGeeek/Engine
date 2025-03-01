@@ -67,77 +67,77 @@ namespace Engine::UI::Panels
 
     void WindowPanel::DrawImpl()
     {
-        if (m_opened)
+        if (!m_opened)
+            return;
+
+        int windowFlags = ImGuiWindowFlags_None;
+
+        if (!m_windowSettings.Resizable)               windowFlags |= ImGuiWindowFlags_NoResize;
+        if (!m_windowSettings.Movable)                 windowFlags |= ImGuiWindowFlags_NoMove;
+        if (!m_windowSettings.Dockable)                windowFlags |= ImGuiWindowFlags_NoDocking;
+        if (m_windowSettings.HideBackground)           windowFlags |= ImGuiWindowFlags_NoBackground;
+        if (m_windowSettings.ForceHorizontalScrollbar) windowFlags |= ImGuiWindowFlags_AlwaysHorizontalScrollbar;
+        if (m_windowSettings.ForceVerticalScrollbar)   windowFlags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
+        if (m_windowSettings.AllowHorizontalScrollbar) windowFlags |= ImGuiWindowFlags_HorizontalScrollbar;
+        if (!m_windowSettings.BringToFrontOnFocus)     windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+        if (!m_windowSettings.Collapsable)             windowFlags |= ImGuiWindowFlags_NoCollapse;
+        if (!m_windowSettings.AllowInputs)             windowFlags |= ImGuiWindowFlags_NoInputs;
+        if (!m_windowSettings.Scrollable)              windowFlags |= ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
+        if (!m_windowSettings.TitleBar)                windowFlags |= ImGuiWindowFlags_NoTitleBar;
+
+        ImVec2 minSizeConstraint(m_minSize.x, m_minSize.y);
+        ImVec2 maxSizeConstraint(m_maxSize.x, m_maxSize.y);
+
+        if (minSizeConstraint.x <= 0.0f || minSizeConstraint.y <= 0.0f)
+            minSizeConstraint = { 0.0f, 0.0f };
+
+        if (maxSizeConstraint.x <= 0.0f || maxSizeConstraint.y <= 0.0f)
+            maxSizeConstraint = { 100000.0f, 100000.0f };
+
+        ImGui::SetNextWindowSizeConstraints(minSizeConstraint, maxSizeConstraint);
+
+        if (ImGui::Begin((m_name + m_panelId).c_str(), m_windowSettings.Closable ? &m_opened : nullptr, windowFlags))
         {
-            int windowFlags = ImGuiWindowFlags_None;
+            m_hovered = ImGui::IsWindowHovered();
+            m_focused = ImGui::IsWindowFocused();
 
-            if (!m_windowSettings.Resizable)               windowFlags |= ImGuiWindowFlags_NoResize;
-            if (!m_windowSettings.Movable)                 windowFlags |= ImGuiWindowFlags_NoMove;
-            if (!m_windowSettings.Dockable)                windowFlags |= ImGuiWindowFlags_NoDocking;
-            if (m_windowSettings.HideBackground)           windowFlags |= ImGuiWindowFlags_NoBackground;
-            if (m_windowSettings.ForceHorizontalScrollbar) windowFlags |= ImGuiWindowFlags_AlwaysHorizontalScrollbar;
-            if (m_windowSettings.ForceVerticalScrollbar)   windowFlags |= ImGuiWindowFlags_AlwaysVerticalScrollbar;
-            if (m_windowSettings.AllowHorizontalScrollbar) windowFlags |= ImGuiWindowFlags_HorizontalScrollbar;
-            if (!m_windowSettings.BringToFrontOnFocus)     windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
-            if (!m_windowSettings.Collapsable)             windowFlags |= ImGuiWindowFlags_NoCollapse;
-            if (!m_windowSettings.AllowInputs)             windowFlags |= ImGuiWindowFlags_NoInputs;
-            if (!m_windowSettings.Scrollable)              windowFlags |= ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
-            if (!m_windowSettings.TitleBar)                windowFlags |= ImGuiWindowFlags_NoTitleBar;
+            float scrollY = ImGui::GetScrollY();
 
-            ImVec2 minSizeConstraint(m_minSize.x, m_minSize.y);
-            ImVec2 maxSizeConstraint(m_maxSize.x, m_maxSize.y);
+            m_scrolledToBottom = scrollY == ImGui::GetScrollMaxY();
+            m_scrolledToTop = scrollY == 0.0f;
 
-            if (minSizeConstraint.x <= 0.0f || minSizeConstraint.y <= 0.0f)
-                minSizeConstraint = { 0.0f, 0.0f };
+            if (!m_opened)
+                CloseEvent.Invoke();
 
-            if (maxSizeConstraint.x <= 0.0f || maxSizeConstraint.y <= 0.0f)
-                maxSizeConstraint = { 100000.0f, 100000.0f };
+            Update();
 
-            ImGui::SetNextWindowSizeConstraints(minSizeConstraint, maxSizeConstraint);
-
-            if (ImGui::Begin((m_name + m_panelId).c_str(), m_windowSettings.Closable ? &m_opened : nullptr, windowFlags))
+            if (m_mustScrollToBottom)
             {
-                m_hovered = ImGui::IsWindowHovered();
-                m_focused = ImGui::IsWindowFocused();
-
-                float scrollY = ImGui::GetScrollY();
-
-                m_scrolledToBottom = scrollY == ImGui::GetScrollMaxY();
-                m_scrolledToTop = scrollY == 0.0f;
-
-                if (!m_opened)
-                    CloseEvent.Invoke();
-
-                Update();
-
-                if (m_mustScrollToBottom)
-                {
-                    ImGui::SetScrollY(ImGui::GetScrollMaxY());
-                    m_mustScrollToBottom = false;
-                }
-
-                if (m_mustScrollToTop)
-                {
-                    ImGui::SetScrollY(0.0f);
-                    m_mustScrollToTop = false;
-                }
-
-                if (m_mustScrollToRight)
-                {
-                    ImGui::SetScrollX(ImGui::GetScrollMaxX());
-                    m_mustScrollToRight = false;
-                }
-
-                if (m_mustScrollToLeft)
-                {
-                    ImGui::SetScrollX(0.0f);
-                    m_mustScrollToLeft = false;
-                }
-
-                DrawWidgets();
+                ImGui::SetScrollY(ImGui::GetScrollMaxY());
+                m_mustScrollToBottom = false;
             }
 
-            ImGui::End();
+            if (m_mustScrollToTop)
+            {
+                ImGui::SetScrollY(0.0f);
+                m_mustScrollToTop = false;
+            }
+
+            if (m_mustScrollToRight)
+            {
+                ImGui::SetScrollX(ImGui::GetScrollMaxX());
+                m_mustScrollToRight = false;
+            }
+
+            if (m_mustScrollToLeft)
+            {
+                ImGui::SetScrollX(0.0f);
+                m_mustScrollToLeft = false;
+            }
+
+            DrawWidgets();
         }
+
+        ImGui::End();
     }
 }

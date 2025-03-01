@@ -6,7 +6,7 @@ namespace Engine::Logs
 {
     enum class ELogLevel
     {
-        Default,
+        Debug,
         Info,
         Warning,
         Error

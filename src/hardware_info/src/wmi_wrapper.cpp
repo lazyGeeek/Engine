@@ -32,7 +32,7 @@ namespace Engine::HardwareInfo
 
         if (FAILED(res))
         {
-            Logs::Logger::PrintLog("[WMI Wrapper] Can't initialize WMI", Logs::ELogLevel::Error);
+            LOG_ERROR("[WMI Wrapper] Can't initialize WMI")
 
             if (m_locator) m_locator->Release();
             if (m_service) m_service->Release();
@@ -48,7 +48,7 @@ namespace Engine::HardwareInfo
         if (FAILED(m_service->ExecQuery(bstr_t(L"WQL"), bstr_t(query.c_str()),
             WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &enumerator)))
         {
-            Logs::Logger::PrintLog("[WMI Wrapper] Can't execute query", Logs::ELogLevel::Error);
+            LOG_ERROR("[WMI Wrapper] Can't execute query")
 
             if (m_locator) m_locator->Release();
             if (m_service) m_service->Release();
@@ -215,7 +215,7 @@ namespace Engine::HardwareInfo
 
         if (FAILED(res))
         {
-            Logs::Logger::PrintLog("[WMI Wrapper] Can't initialize WMI", Logs::ELogLevel::Error);
+            LOG_ERROR("[WMI Wrapper] Can't initialize WMI")
 
             if (m_locator) m_locator->Release();
             if (m_service) m_service->Release();
@@ -231,7 +231,7 @@ namespace Engine::HardwareInfo
         if (FAILED(m_service->ExecQuery(bstr_t(L"WQL"), bstr_t(query.c_str()),
             WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &enumerator)))
         {
-            Logs::Logger::PrintLog("[WMI Wrapper] Can't execute query", Logs::ELogLevel::Error);
+            LOG_ERROR("[WMI Wrapper] Can't execute query")
 
             if (m_locator) m_locator->Release();
             if (m_service) m_service->Release();
@@ -450,7 +450,7 @@ namespace Engine::HardwareInfo
 
         if (FAILED(res))
         {
-            Logs::Logger::PrintLog("[WMI Wrapper] Can't initialize WMI", Logs::ELogLevel::Error);
+            LOG_ERROR("[WMI Wrapper] Can't initialize WMI")
 
             if (m_locator) m_locator->Release();
             if (m_service) m_service->Release();
@@ -466,7 +466,7 @@ namespace Engine::HardwareInfo
         if (FAILED(m_service->ExecQuery(bstr_t(L"WQL"), bstr_t(query.c_str()),
             WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, nullptr, &enumerator)))
         {
-            Logs::Logger::PrintLog("[WMI Wrapper] Can't execute query", Logs::ELogLevel::Error);
+            LOG_ERROR("[WMI Wrapper] Can't execute query")
 
             if (m_locator) m_locator->Release();
             if (m_service) m_service->Release();

@@ -1,14 +1,13 @@
 #include "engine/application.hpp"
 
-#include "logs/logger.hpp"
+#include "hardware_info/profiler_panel.hpp"
+#include "logs/logger_panel.hpp"
 #include "renderer/driver.hpp"
 #include "renderer/open_gl.hpp"
 #include "tools/services/service_locator.hpp"
 #include "tools/time/global_clock.hpp"
 #include "ui/ui_manager.hpp"
 #include "windows/glfw.hpp"
-
-#include "hardware_info/profiler_panel.hpp"
 
 namespace Engine
 {
@@ -23,7 +22,7 @@ namespace Engine
         UI::UIManager& manager = Tools::Services::ServiceLocator::Provide<UI::UIManager>(ProjectPath / "Configs\\ImGui.ini", "#version 460");
         manager.EnableDocking(true);
         manager.ApplyStyle(UI::Styling::EStyle::CustomDark);
-        manager.LoadFont("PixelOperator", ProjectPath / "Configs\\Fonts\\PixelOperator.ttf", 12);
+        manager.LoadFont("PixelOperator", ProjectPath / "Configs\\Fonts\\PixelOperator.ttf", 16);
         manager.UseFont("PixelOperator");
     }
 
@@ -50,6 +49,9 @@ namespace Engine
 
         std::shared_ptr<HardwareInfo::ProfilerPanel> profiler = canvas->AddPanel<HardwareInfo::ProfilerPanel>();
         profiler->SetSize(glm::vec2(300.0f, 500.0f));
+
+        std::shared_ptr<Logs::LoggerPanel> console = canvas->AddPanel<Logs::LoggerPanel>();
+        console->SetSize(glm::vec2(1000.0f, 250.0f));
 
         while (IsRunning())
         {

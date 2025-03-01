@@ -14,7 +14,11 @@ target_compile_features(${ENGINE_LOGS_PROJECT} PRIVATE cxx_std_17)
 target_include_directories(${ENGINE_LOGS_PROJECT} PRIVATE 
     ${CMAKE_SOURCE_DIR}/src/logs/include
     ${CMAKE_SOURCE_DIR}/src/tools/include
+    ${CMAKE_SOURCE_DIR}/src/ui/include
+    ${ENGINE_EXTERNAL_INCLUDE_DIR}
+    ${ENGINE_EXTERNAL_INCLUDE_DIR}/imgui
 )
+target_link_libraries(${ENGINE_LOGS_PROJECT} ${ENGINE_LIBS_LIST} Tools UI)
 
 foreach(CODE_FILE IN ITEMS ${ENGINE_LOGS_CODE_LIST})
     get_filename_component(CODE_FILE_PATH "${CODE_FILE}" PATH)
