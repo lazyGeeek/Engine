@@ -45,3 +45,11 @@ endforeach()
 add_custom_command(TARGET ${ENGINE_ENGINE_PROJECT} PRE_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy_directory
                         ${CMAKE_SOURCE_DIR}/thirdparty/engine/Configs $<TARGET_FILE_DIR:${ENGINE_ENGINE_PROJECT}>/Configs)
+
+add_custom_command(TARGET ${ENGINE_ENGINE_PROJECT} PRE_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_SOURCE_DIR}/thirdparty/engine/Models $<TARGET_FILE_DIR:${ENGINE_ENGINE_PROJECT}>/Models)
+
+add_custom_command(TARGET ${ENGINE_ENGINE_PROJECT} PRE_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_SOURCE_DIR}/src/renderer/shaders $<TARGET_FILE_DIR:${ENGINE_ENGINE_PROJECT}>/Shaders)

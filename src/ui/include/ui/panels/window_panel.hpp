@@ -15,7 +15,11 @@ namespace Engine::UI::Panels
         (
             const std::string& name = "",
             bool opened = true,
-            const Settings::PanelWindowSettings& windowSettings = Settings::PanelWindowSettings { }
+            const Settings::PanelWindowSettings& windowSettings = Settings::PanelWindowSettings { },
+            const glm::vec2& position                                 = glm::vec2(0.0f, 0.0f),
+            const glm::vec2& size                                     = glm::vec2(1.0f, 1.0f),
+            Settings::EVerticalAlignment defaultVerticalAlignment     = Settings::EVerticalAlignment::Top,
+            Settings::EHorizontalAlignment defaultHorizontalAlignment = Settings::EHorizontalAlignment::Left
         );
 
         virtual ~WindowPanel();
@@ -48,6 +52,9 @@ namespace Engine::UI::Panels
         bool IsAutoSize() const { return m_autoSize; }
         void SetAutoSize(bool autoSize) { m_autoSize = autoSize; }
 
+        bool IsPaddingsDisabled() const { return m_disablePaddings; }
+        void DisablePaddings(bool value) { m_disablePaddings = value; }
+
         Tools::Eventing::Event<> OpenEvent;
         Tools::Eventing::Event<> CloseEvent;
 
@@ -72,6 +79,8 @@ namespace Engine::UI::Panels
         bool m_mustScrollToTop    = false;
         bool m_mustScrollToRight  = false;
         bool m_mustScrollToLeft   = false;
+
+        bool m_disablePaddings    = false;
     };
 }
 

@@ -28,7 +28,33 @@ namespace Engine::UI::Widgets::Layouts
         if (m_groupSettings.FrameStyle)              groupFlags |= ImGuiChildFlags_FrameStyle;
 
         if (ImGui::BeginChild((m_label + m_widgetId).c_str(), ImVec2(0.0f, 0.0f), groupFlags))
+        {
+            if (m_mustScrollToBottom)
+            {
+                ImGui::SetScrollY(ImGui::GetScrollMaxY());
+                m_mustScrollToBottom = false;
+            }
+
+            if (m_mustScrollToTop)
+            {
+                ImGui::SetScrollY(0.0f);
+                m_mustScrollToTop = false;
+            }
+
+            if (m_mustScrollToRight)
+            {
+                ImGui::SetScrollX(ImGui::GetScrollMaxX());
+                m_mustScrollToRight = false;
+            }
+
+            if (m_mustScrollToLeft)
+            {
+                ImGui::SetScrollX(0.0f);
+                m_mustScrollToLeft = false;
+            }
+
             DrawWidgets();
+        }
 
         ImGui::EndChild();
     }

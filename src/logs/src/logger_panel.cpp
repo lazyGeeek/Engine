@@ -73,7 +73,6 @@ namespace Engine::Logs
             m_errorCheckBox->SetValue(true);
         };
 
-
         m_logMessagesGroup = CreateWidget<UIGroup>();
 
         m_logRecieveListener = Logger::LogMessageReceived +=
@@ -185,6 +184,8 @@ namespace Engine::Logs
         }
 
         m_logDeque.emplace_back(newMessage);
+
+        m_logMessagesGroup->ScrollToBottom();
     }
 
     void LoggerPanel::clearButtonClicked()

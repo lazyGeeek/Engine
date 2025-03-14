@@ -2,6 +2,7 @@
 #ifndef ENGINE_RENDERER_OPENGL_HPP_
 #define ENGINE_RENDERER_OPENGL_HPP_
 
+//#include "renderer/resources/mesh_interface.hpp"
 #include "settings/comparison_algorithm.hpp"
 #include "settings/cull_face.hpp"
 #include "settings/operation.hpp"
@@ -17,15 +18,10 @@
 #include <memory>
 #include <string>
 
+namespace Engine::Renderer::Resources { class IMesh; }
+
 namespace Engine::Renderer
 {
-    // struct FrameInfo
-    // {
-    //     uint64_t BatchCount    = 0;
-    //     uint64_t InstanceCount = 0;
-    //     uint64_t PolyCount     = 0;
-    // };
-
     class OpenGL : public Tools::Services::IService
     {
     public:
@@ -39,6 +35,7 @@ namespace Engine::Renderer
 
         void SetClearColor(float red, float green, float blue, float alpha = 1.0f);
         void Clear(bool colorBuffer = true, bool depthBuffer = true, bool stencilBuffer = true);
+        void SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
         void SetRasterizationLinesWidth(float width);
         void SetRasterizationMode(Settings::ERasterizationMode rasterizationMode);
         void SetCapability(Settings::ERenderingCapability capability, bool value);
@@ -51,7 +48,6 @@ namespace Engine::Renderer
         void SetDepthWriting(bool enable);
         void SetColorWriting(bool enableRed, bool enableGreen, bool enableBlue, bool enableAlpha);
         void SetColorWriting(bool enable);
-        void SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
         void ReadPixels(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Settings::EPixelDataFormat format, Settings::EPixelDataType type, void* data);
         bool GetBool(GLenum parameter);
         bool GetBool(GLenum parameter, uint32_t index);
@@ -65,17 +61,14 @@ namespace Engine::Renderer
         int64_t GetInt64(GLenum parameter, uint32_t index);
         std::string GetString(GLenum parameter);
         std::string GetString(GLenum parameter, uint32_t index);
-        // void ClearFrameInfo();
-        // void Draw(std::shared_ptr<Resources::IMesh> mesh, Settings::EPrimitiveMode primitiveMode = Settings::EPrimitiveMode::Triangles, uint32_t instances = 1);
 
-        //uint8_t FetchGLState();
-        //void ApplyStateMask(uint8_t mask);
-        //void SetState(uint8_t state);
-        // const FrameInfo& GetFrameInfo() const;
+        void Draw(const std::shared_ptr<Resources::IMesh> mesh, Settings::EPrimitiveMode primitiveMode = Settings::EPrimitiveMode::Triangles, uint32_t instances = 1);
+
+        uint8_t FetchGLState();
+        void ApplyStateMask(uint8_t mask);
 
     private:
-        // FrameInfo m_frameInfo;
-        uint8_t   m_state = 0;
+        uint8_t m_state = 0;
     };
 }
 

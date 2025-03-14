@@ -22,10 +22,26 @@ namespace Engine::UI::Widgets::Layouts
         void SetSettings(const Settings::GroupWidgetSettings& settings) { m_groupSettings = settings; }
         Settings::GroupWidgetSettings GetSettings() const { return m_groupSettings; }
 
+        void ScrollToBottom() { m_mustScrollToBottom = true; }
+        void ScrollToTop()    { m_mustScrollToTop    = true; }
+        void ScrollToRight()  { m_mustScrollToRight  = true; }
+        void ScrollToLeft()   { m_mustScrollToLeft   = true; }
+
+        bool IsScrolledToBottom() const { return m_mustScrollToBottom; }
+        bool IsScrolledToTop()    const { return m_mustScrollToTop; }
+        bool IsScrolledToRight()  const { return m_mustScrollToRight; }
+        bool IsScrolledToLeft()   const { return m_mustScrollToLeft; }
+
     protected:
         virtual void DrawImpl() override;
 
         Settings::GroupWidgetSettings m_groupSettings;
+
+    private:
+        bool m_mustScrollToBottom = false;
+        bool m_mustScrollToTop    = false;
+        bool m_mustScrollToRight  = false;
+        bool m_mustScrollToLeft   = false;
     };
 }
 

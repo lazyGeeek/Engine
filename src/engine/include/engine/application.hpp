@@ -9,7 +9,7 @@ namespace Engine
     class Application
     {
     public:
-        Application(std::filesystem::path projectPath);
+        Application(const std::filesystem::path& projectPath);
         ~Application();
 
         Application(const Application& other)             = delete;
@@ -21,6 +21,7 @@ namespace Engine
         bool IsRunning() const;
 
         const std::filesystem::path ProjectPath;
+        const std::filesystem::path ProjectShadersPath;
     };
 }
 

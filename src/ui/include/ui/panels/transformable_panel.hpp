@@ -6,16 +6,17 @@
 
 #include "base_panel.hpp"
 #include "ui/settings/alignment.hpp"
+#include "ui/widgets/interfaces/resizable.hpp"
 
 namespace Engine::UI::Panels
 {
-    class TransformablePanel : public BasePanel
+    class TransformablePanel : public BasePanel, public Widgets::Interfaces::Resizable
     {
     public:
         TransformablePanel
         (
-            const glm::vec2& defaultPosition = glm::vec2(-1.0f, -1.0f),
-            const glm::vec2& defaultSize     = glm::vec2(-1.0f, -1.0f),
+            const glm::vec2& position = glm::vec2(0.0f, 0.0f),
+            const glm::vec2& size     = glm::vec2(1.0f, 1.0f),
             Settings::EVerticalAlignment defaultVerticalAlignment     = Settings::EVerticalAlignment::Top,
             Settings::EHorizontalAlignment defaultHorizontalAlignment = Settings::EHorizontalAlignment::Left,
             bool ignoreConfigFile = false
@@ -28,24 +29,21 @@ namespace Engine::UI::Panels
         TransformablePanel& operator=(const TransformablePanel& other)  = delete;
         TransformablePanel& operator=(const TransformablePanel&& other) = delete;
 
-        void SetPosition(const glm::vec2& position);
-        void SetSize(const glm::vec2& size);
+        virtual void SetPosition(const glm::vec2& position);
+        virtual void Resize(const glm::vec2& size) override;
+        virtual glm::vec2 GetContentSize() const;
 
-        void SetHorizontalAlignment(Settings::EHorizontalAlignment horizontalAlignment);
-        void SetVerticalAlignment(Settings::EVerticalAlignment verticalAligment);
+        virtual void SetHorizontalAlignment(Settings::EHorizontalAlignment horizontalAlignment);
+        virtual void SetVerticalAlignment(Settings::EVerticalAlignment verticalAligment);
 
-        const glm::vec2& GetPosition() const { return m_position; }
-        const glm::vec2& GetSize() const     { return m_size; }
+        virtual const glm::vec2& GetPosition() const { return m_position; }
 
         Settings::EHorizontalAlignment GetHorizontalAlignment() const { return m_horizontalAlignment; }
-        Settings::EVerticalAlignment GetVerticalAlignment() const     { return m_verticalAlignment; }
+        Settings::EVerticalAlignment GetVerticalAlignment()     const { return m_verticalAlignment; }
 
     protected:
-        void Update();
+        virtual void Update();
         virtual void DrawImpl() = 0;
-
-        glm::vec2 m_defaultPosition = glm::vec2(-1.0f);
-        glm::vec2 m_defaultSize     = glm::vec2(-1.0f);
 
         Settings::EHorizontalAlignment m_defaultHorizontalAlignment = Settings::EHorizontalAlignment::Left;
         Settings::EVerticalAlignment m_defaultVerticalAlignment     = Settings::EVerticalAlignment::Top;
@@ -53,7 +51,7 @@ namespace Engine::UI::Panels
         bool m_ignoreConfigFile = true;
 
         glm::vec2 m_position = glm::vec2(0.0f);
-        glm::vec2 m_size     = glm::vec2(0.0f);
+        glm::vec2 m_contentSize = glm::vec2(1.0f);
 
         bool m_positionChanged  = false;
         bool m_sizeChanged      = false;

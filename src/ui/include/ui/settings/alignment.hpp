@@ -7,7 +7,7 @@ namespace Engine::UI::Settings
     enum class EHorizontalAlignment
     {
         Left,
-        Center,
+        Middle,
         Right
     };
 

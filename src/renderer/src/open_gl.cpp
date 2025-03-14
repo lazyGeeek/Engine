@@ -1,4 +1,5 @@
 #include "renderer/open_gl.hpp"
+#include "renderer/resources/mesh_interface.hpp"
 
 namespace Engine::Renderer
 {
@@ -11,10 +12,15 @@ namespace Engine::Renderer
     {
         glClear
         (
-            (colorBuffer ? GL_COLOR_BUFFER_BIT : 0) |
-            (depthBuffer ? GL_DEPTH_BUFFER_BIT : 0) |
+            (colorBuffer   ? GL_COLOR_BUFFER_BIT   : 0) |
+            (depthBuffer   ? GL_DEPTH_BUFFER_BIT   : 0) |
             (stencilBuffer ? GL_STENCIL_BUFFER_BIT : 0)
         );
+    }
+
+    void OpenGL::SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+    {
+        glViewport(x, y, width, height);
     }
 
     void OpenGL::SetRasterizationLinesWidth(float width)
@@ -75,11 +81,6 @@ namespace Engine::Renderer
     void OpenGL::SetColorWriting(bool enable)
     {
         glColorMask(enable, enable, enable, enable);
-    }
-
-    void OpenGL::SetViewPort(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
-    {
-        glViewport(x, y, width, height);
     }
 
     void OpenGL::ReadPixels(uint32_t x, uint32_t y, uint32_t width, uint32_t height, Settings::EPixelDataFormat format, Settings::EPixelDataType type, void* data)
@@ -169,95 +170,73 @@ namespace Engine::Renderer
         return result ? reinterpret_cast<const char*>(result) : std::string();
     }
 
-    // void OpenGL::ClearFrameInfo()
-    // {
-    //     m_frameInfo.BatchCount = 0;
-    //     m_frameInfo.InstanceCount = 0;
-    //     m_frameInfo.PolyCount = 0;
-    // }
+    void OpenGL::Draw(const std::shared_ptr<Resources::IMesh> mesh, Settings::EPrimitiveMode primitiveMode, uint32_t instances)
+    {
+        if (instances > 0)
+        {
+            mesh->Bind();
 
-    // void OpenGL::Draw(std::shared_ptr<Resources::IMesh> mesh, Settings::EPrimitiveMode primitiveMode, uint32_t instances)
-    // {
-    //     if (instances > 0)
-    //     {
-    //         ++m_frameInfo.BatchCount;
-    //         m_frameInfo.InstanceCount += instances;
-    //         m_frameInfo.PolyCount += (mesh->GetIndexCount() / 3) * instances;
+            if (mesh->GetIndexCount() > 0)
+            {
+                if (instances == 1)
+                    glDrawElements(static_cast<GLenum>(primitiveMode), mesh->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+                else
+                    glDrawElementsInstanced(static_cast<GLenum>(primitiveMode), mesh->GetIndexCount(), GL_UNSIGNED_INT, nullptr, instances);
+            }
+            else
+            {
+                if (instances == 1)
+                    glDrawArrays(static_cast<GLenum>(primitiveMode), 0, mesh->GetVertexCount());
+                else
+                    glDrawArraysInstanced(static_cast<GLenum>(primitiveMode), 0, mesh->GetVertexCount(), instances);
+            }
 
-    //         mesh->Bind();
+            mesh->Unbind();
+        }
+    }
 
-    //         if (mesh->GetIndexCount() > 0)
-    //         {
-    //             /* With EBO */
-    //             if (instances == 1)
-    //                 glDrawElements(static_cast<GLenum>(primitiveMode), mesh->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
-    //             else
-    //                 glDrawElementsInstanced(static_cast<GLenum>(primitiveMode), mesh->GetIndexCount(), GL_UNSIGNED_INT, nullptr, instances);
-    //         }
-    //         else
-    //         {
-    //             /* Without EBO */
-    //             if (instances == 1)
-    //                 glDrawArrays(static_cast<GLenum>(primitiveMode), 0, mesh->GetVertexCount());
-    //             else
-    //                 glDrawArraysInstanced(static_cast<GLenum>(primitiveMode), 0, mesh->GetVertexCount(), instances);
-    //         }
+    uint8_t OpenGL::FetchGLState()
+    {
+        uint8_t result = 0;
 
-    //         mesh->Unbind();
-    //     }
-    // }
+        GLboolean cMask[4];
+        glGetBooleanv(GL_COLOR_WRITEMASK, cMask);
 
-    //uint8_t OpenGL::FetchGLState()
-    //{
-    //    uint8_t result = 0;
+        if (GetBool(GL_DEPTH_WRITEMASK))                              result |= 0b0000'0001;
+        if (cMask[0])                                                 result |= 0b0000'0010;
+        if (GetCapability(Settings::ERenderingCapability::Blend))     result |= 0b0000'0100;
+        if (GetCapability(Settings::ERenderingCapability::CullFace))  result |= 0b0000'1000;
+        if (GetCapability(Settings::ERenderingCapability::DepthTest)) result |= 0b0001'0000;
 
-    //    GLboolean cMask[4];
-    //    glGetBooleanv(GL_COLOR_WRITEMASK, cMask);
+        switch (static_cast<Settings::ECullFace>(GetInt(GL_CULL_FACE)))
+        {
+            case Settings::ECullFace::Back:         result |= 0b0010'0000; break;
+            case Settings::ECullFace::Front:        result |= 0b0100'0000; break;
+            case Settings::ECullFace::FrontAndBack: result |= 0b0110'0000; break;
+        }
 
-    //    if (GetBool(GL_DEPTH_WRITEMASK))                              result |= 0b0000'0001;
-    //    if (cMask[0])                                                 result |= 0b0000'0010;
-    //    if (GetCapability(Settings::ERenderingCapability::Blend))     result |= 0b0000'0100;
-    //    if (GetCapability(Settings::ERenderingCapability::CullFace))  result |= 0b0000'1000;
-    //    if (GetCapability(Settings::ERenderingCapability::DepthTest)) result |= 0b0001'0000;
+        return result;
+    }
 
-    //    switch (static_cast<Settings::ECullFace>(GetInt(GL_CULL_FACE)))
-    //    {
-    //        case Settings::ECullFace::Back:         result |= 0b0010'0000; break;
-    //        case Settings::ECullFace::Front:        result |= 0b0100'0000; break;
-    //        case Settings::ECullFace::FrontAndBack: result |= 0b0110'0000; break;
-    //    }
+    void OpenGL::ApplyStateMask(uint8_t mask)
+    {
+        if (mask != m_state)
+        {
+            if ((mask & 0x01) != (m_state & 0x01)) SetDepthWriting(mask & 0x01);
+            if ((mask & 0x02) != (m_state & 0x02)) SetColorWriting(mask & 0x02);
+            if ((mask & 0x04) != (m_state & 0x04)) SetCapability(Settings::ERenderingCapability::Blend, mask & 0x04);
+            if ((mask & 0x08) != (m_state & 0x08)) SetCapability(Settings::ERenderingCapability::CullFace, mask & 0x8);
+            if ((mask & 0x10) != (m_state & 0x10)) SetCapability(Settings::ERenderingCapability::DepthTest, mask & 0x10);
 
-    //    return result;
-    //}
+            if ((mask & 0x08) && ((mask & 0x20) != (m_state & 0x20) || (mask & 0x40) != (m_state & 0x40)))
+            {
+                int backBit = mask & 0x20;
+                int frontBit = mask & 0x40;
+                SetCullFace(backBit && frontBit ? Settings::ECullFace::FrontAndBack :
+                    (backBit ? Settings::ECullFace::Back : Settings::ECullFace::Front));
+            }
 
-    //void OpenGL::ApplyStateMask(uint8_t mask)
-    //{
-    //    if (mask != m_state)
-    //    {
-    //        if ((mask & 0x01) != (m_state & 0x01)) SetDepthWriting(mask & 0x01);
-    //        if ((mask & 0x02) != (m_state & 0x02)) SetColorWriting(mask & 0x02);
-    //        if ((mask & 0x04) != (m_state & 0x04)) SetCapability(Settings::ERenderingCapability::Blend,     mask & 0x04);
-    //        if ((mask & 0x08) != (m_state & 0x08)) SetCapability(Settings::ERenderingCapability::CullFace,  mask & 0x8);
-    //        if ((mask & 0x10) != (m_state & 0x10)) SetCapability(Settings::ERenderingCapability::DepthTest, mask & 0x10);
-
-    //        if ((mask & 0x08) && ((mask & 0x20) != (m_state & 0x20) || (mask & 0x40) != (m_state & 0x40)))
-    //        {
-    //            int backBit = mask & 0x20;
-    //            int frontBit = mask & 0x40;
-    //            SetCullFace(backBit && frontBit ? Settings::ECullFace::FrontAndBack : (backBit ? Settings::ECullFace::Back : Settings::ECullFace::Front));
-    //        }
-
-    //        m_state = mask;
-    //    }
-    //}
-
-    //void OpenGL::SetState(uint8_t state)
-    //{
-    //    m_state = state;
-    //}
-
-    // const FrameInfo& OpenGL::GetFrameInfo() const
-    // {
-    //     return m_frameInfo;
-    // }
+            m_state = mask;
+        }
+    }
 }

@@ -43,7 +43,7 @@ namespace Engine::Windows
     {
         auto errorCallback = [](int code, const char* description)
         {
-            LOG_ERROR(description)
+            LOG_ERROR(description);
         };
 
         glfwSetErrorCallback(errorCallback);

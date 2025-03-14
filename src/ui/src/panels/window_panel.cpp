@@ -8,10 +8,15 @@
 
 namespace Engine::UI::Panels
 {
-    WindowPanel::WindowPanel(const std::string& name, bool opened, const Settings::PanelWindowSettings& windowSettings)
-        : m_name { name },
-          m_opened { opened },
-          m_windowSettings { windowSettings }
+    WindowPanel::WindowPanel(const std::string& name, bool opened,
+        const Settings::PanelWindowSettings& windowSettings,
+        const glm::vec2& position, const glm::vec2& size,
+        Settings::EVerticalAlignment defaultVerticalAlignment,
+        Settings::EHorizontalAlignment defaultHorizontalAlignment) :
+        TransformablePanel(position, size, defaultVerticalAlignment, defaultHorizontalAlignment),
+        m_name { name },
+        m_opened { opened },
+        m_windowSettings { windowSettings }
     {
         m_autoSize = windowSettings.AutoSize;
     }
@@ -96,6 +101,9 @@ namespace Engine::UI::Panels
 
         ImGui::SetNextWindowSizeConstraints(minSizeConstraint, maxSizeConstraint);
 
+        if (m_disablePaddings)
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
         if (ImGui::Begin((m_name + m_panelId).c_str(), m_windowSettings.Closable ? &m_opened : nullptr, windowFlags))
         {
             m_hovered = ImGui::IsWindowHovered();
@@ -139,5 +147,8 @@ namespace Engine::UI::Panels
         }
 
         ImGui::End();
+
+        if (m_disablePaddings)
+            ImGui::PopStyleVar();
     }
 }

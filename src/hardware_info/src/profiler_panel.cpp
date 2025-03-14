@@ -88,7 +88,7 @@ namespace Engine::HardwareInfo
             m_cpuInfoTree->CreateWidget<UIText>(text);
         }
         else
-            LOG_ERROR("Can't get CPU Info")
+            LOG_ERROR("Can't get CPU Info");
 
         std::optional<std::list<GPUInfo>> gpuInfo = HardwareInfo::WMIWrapper::GetGPUInfo();
 
@@ -122,7 +122,7 @@ namespace Engine::HardwareInfo
             }
         }
         else
-            LOG_ERROR("Can't get GPU Info")
+            LOG_ERROR("Can't get GPU Info");
 
         std::optional<std::list<RAMInfo>> ramInfo = HardwareInfo::WMIWrapper::GetRAMInfo();
 
@@ -148,7 +148,7 @@ namespace Engine::HardwareInfo
             }
         }
         else
-            LOG_ERROR("Can't get RAM Info")
+            LOG_ERROR("Can't get RAM Info");
     }
 
     void ProfilerPanel::calculateHardwareInfo()

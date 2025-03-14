@@ -6,18 +6,16 @@ namespace Engine::UI::Panels
 {
     TransformablePanel::TransformablePanel
     (
-        const glm::vec2& defaultPosition, const glm::vec2& defaultSize,
+        const glm::vec2& position, const glm::vec2& size,
         Settings::EVerticalAlignment defaultVerticalAlignment,
         Settings::EHorizontalAlignment defaultHorizontalAlignment,
         bool ignoreConfigFile
-    ) : m_defaultPosition { defaultPosition },
-        m_defaultSize { defaultSize },
-        m_defaultVerticalAlignment { defaultVerticalAlignment },
+    ) : m_defaultVerticalAlignment   { defaultVerticalAlignment },
         m_defaultHorizontalAlignment { defaultHorizontalAlignment },
-        m_ignoreConfigFile { ignoreConfigFile }
+        m_ignoreConfigFile           { ignoreConfigFile }
     {
-        SetPosition(m_defaultPosition);
-        SetSize(m_defaultSize);
+        Resize(m_size);
+        SetPosition(m_position);
         SetVerticalAlignment(m_defaultVerticalAlignment);
         SetHorizontalAlignment(m_defaultHorizontalAlignment);
     }
@@ -26,12 +24,6 @@ namespace Engine::UI::Panels
     {
         m_position = position;
         m_positionChanged = true;
-    }
-
-    void TransformablePanel::SetSize(const glm::vec2& size)
-    {
-        m_size = size;
-        m_sizeChanged = true;
     }
 
     void TransformablePanel::SetHorizontalAlignment(Settings::EHorizontalAlignment horizontalAlignment)
@@ -46,14 +38,19 @@ namespace Engine::UI::Panels
         m_alignmentChanged = true;
     }
 
+    void TransformablePanel::Resize(const glm::vec2& size)
+    {
+        m_size = size;
+        m_sizeChanged = true;
+    }
+
+    glm::vec2 TransformablePanel::GetContentSize() const
+    {
+        return m_contentSize;
+    }
+
     void TransformablePanel::updatePosition()
     {
-        if (m_defaultPosition != glm::vec2(-1.0))
-        {
-            glm::vec2 offsettedDefaultPos = m_defaultPosition + calculatePositionAlignmentOffset(true);
-            ImGui::SetWindowPos(ImVec2(offsettedDefaultPos.x, offsettedDefaultPos.y), m_ignoreConfigFile ? ImGuiCond_Once : ImGuiCond_FirstUseEver);
-        }
-
         if (m_positionChanged || m_alignmentChanged)
         {
             glm::vec2 offset = calculatePositionAlignmentOffset(false);
@@ -73,16 +70,19 @@ namespace Engine::UI::Panels
         }
     }
 
-    void TransformablePanel::copyImGuiPosition()
-    {
-        ImVec2 pos = ImGui::GetWindowPos();
-        m_position = glm::vec2(pos.x, pos.y);
-    }
-
     void TransformablePanel::copyImGuiSize()
     {
         ImVec2 size = ImGui::GetWindowSize();
         m_size = glm::vec2(size.x, size.y);
+
+        size = ImGui::GetContentRegionAvail();
+        m_contentSize = glm::vec2(size.x, size.y);
+    }
+
+    void TransformablePanel::copyImGuiPosition()
+    {
+        ImVec2 pos = ImGui::GetWindowPos();
+        m_position = glm::vec2(pos.x, pos.y);
     }
 
     void TransformablePanel::Update()
@@ -106,7 +106,7 @@ namespace Engine::UI::Panels
 
         switch (default ? m_defaultHorizontalAlignment : m_horizontalAlignment)
         {
-            case Settings::EHorizontalAlignment::Center:
+            case Settings::EHorizontalAlignment::Middle:
             {
                 result.x -= m_size.x / 2.0f;
                 break;
