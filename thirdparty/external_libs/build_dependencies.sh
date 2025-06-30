@@ -38,15 +38,14 @@ cmake $ScriptDir/temp/assimp-5.4.3 -B$ScriptDir/temp/assimp-5.4.3/build \
   -DASSIMP_BUILD_ZLIB=ON \
   -DASSIMP_LIBRARY_SUFFIX="" \
   -DASSIMP_INJECT_DEBUG_POSTFIX=OFF \
-  -DBUILD_SHARED_LIBS=ON \
-  -DCMAKE_DEBUG_POSTFIX=""
+  -DBUILD_SHARED_LIBS=ON
 
 cmake --build $ScriptDir/temp/assimp-5.4.3/build
 
-cp -r $ScriptDir/temp/assimp-5.4.3/include/ $ScriptDir/../include
-cp -r $ScriptDir/temp/assimp-5.4.3/build/include/ $ScriptDir/../include
-find $ScriptDir/temp/assimp-5.4.3/build \( -name '*.lib' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs \;
-find $ScriptDir/temp/assimp-5.4.3/build \( -name '*.pdb' -o -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
+cp -r $ScriptDir/temp/assimp-5.4.3/include/ $ScriptDir/../
+cp -r $ScriptDir/temp/assimp-5.4.3/build/include/ $ScriptDir/../
+cp -r $ScriptDir/temp/assimp-5.4.3/build/bin/*.so* $ScriptDir/../bins/
+find $ScriptDir/temp/assimp-5.4.3/build \( -name '*.a' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs/ \;
 
 echo -e "\n============================================================================"
 echo -e "Finish Building Assimp"
@@ -59,19 +58,19 @@ echo -e "=======================================================================
 unzip -o $ScriptDir/glfw-3.3.8.zip -d $ScriptDir/temp > /dev/null
 
 cmake $ScriptDir/temp/glfw-3.3.8 -B$ScriptDir/temp/glfw-3.3.8/build \
-  -DSDL2_DISABLE_INSTALL=ON \
-  -DSDL2_DISABLE_UNINSTALL=ON \
-  -DSDL_TEST=OFF \
-  -DSDL_SHARED=ON \
-  -DSDL_STATIC=OFF \
-  -DCMAKE_DEBUG_POSTFIX=""
+  -DGLFW_BUILD_EXAMPLES=OFF \
+  -DGLFW_BUILD_TESTS=OFF \
+  -DGLFW_BUILD_DOCS=OFF \
+  -DGLFW_INSTALL=OFF \
+  -DGLFW_VULKAN_STATIC=OFF \
+  -DBUILD_SHARED_LIBS=ON
 
 cmake --build $ScriptDir/temp/glfw-3.3.8/build --config Release
 
-cp -r $ScriptDir/temp/glfw-3.3.8/build/include/ $ScriptDir/../include
-cp -r $ScriptDir/temp/glfw-3.3.8/build/include-config-/ $ScriptDir/../include
-find $ScriptDir/temp/glfw-3.3.8/build \( -name '*.so' -o -name '*.dylib' -o \) -type f -exec cp '{}' $ScriptDir/../libs \;
-find $ScriptDir/temp/glfw-3.3.8/build \( -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
+cp -r $ScriptDir/temp/glfw-3.3.8/include/ $ScriptDir/../
+cp -r $ScriptDir/temp/glfw-3.3.8/build/src/glfw_config.h $ScriptDir/../include/GLFW/glfw_config.h
+cp -r $ScriptDir/temp/glfw-3.3.8/build/src/*.so* $ScriptDir/../bins/
+find $ScriptDir/temp/glfw-3.3.8/build \( -name '*.a' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs \;
 
 echo -e "\n============================================================================"
 echo -e "Finish Building GLFW"
@@ -85,13 +84,13 @@ unzip -o $ScriptDir/glew-2.2.0.zip -d $ScriptDir/temp > /dev/null
 
 cmake $ScriptDir/temp/glew-2.2.0/build/cmake -B$ScriptDir/temp/glew-2.2.0/new_build \
     -DBUILD_UTILS=OFF \
-    -DBUILD_SHARED_LIBS=OFF
+    -DBUILD_SHARED_LIBS=ON
 
 cmake --build $ScriptDir/temp/glew-2.2.0/new_build --config Release
 
-cp -r $ScriptDir/temp/glew-2.2.0/include/ $ScriptDir/../include
-find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.so' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs \;
-find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
+cp -r $ScriptDir/temp/glew-2.2.0/include/ $ScriptDir/../
+cp -r $ScriptDir/temp/glew-2.2.0/new_build/lib/*.so* $ScriptDir/../bins/
+find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.a' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs/ \;
 
 echo -e "\n============================================================================"
 echo -e "Finish Building GLEW"
@@ -118,6 +117,12 @@ echo -e "=======================================================================
 
 unzip -o $ScriptDir/stb.zip -d $ScriptDir/temp > /dev/null
 cp $ScriptDir/temp/stb/stb_image.h $ScriptDir/../include/stb/
+
+echo -e "\n============================================================================"
+echo -e "Cleaning"
+echo -e "============================================================================"
+
+rm -rf $ScriptDir/temp
 
 echo -e "\n============================================================================"
 echo -e "Finished"
