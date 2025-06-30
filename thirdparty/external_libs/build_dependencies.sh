@@ -18,7 +18,39 @@ declare ScriptDir=$(dirname "$0")
 
 mkdir -p $ScriptDir/../bins
 mkdir -p $ScriptDir/../include
+mkdir -p $ScriptDir/../include/imgui
+mkdir -p $ScriptDir/../include/stb
 mkdir -p $ScriptDir/../libs
+
+echo -e "\n============================================================================"
+echo -e "Start Building Assimp"
+echo -e "============================================================================\n"
+
+unzip -o $ScriptDir/assimp-5.4.3.zip -d $ScriptDir/temp > /dev/null
+
+cmake $ScriptDir/temp/assimp-5.4.3 -B$ScriptDir/temp/assimp-5.4.3/build \
+  -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF  \
+  -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF \
+  -DASSIMP_BUILD_ASSIMP_TOOLS=OFF \
+  -DASSIMP_BUILD_TESTS=OFF \
+  -DASSIMP_BUILD_FBX_IMPORTER=ON \
+  -DASSIMP_BUILD_OBJ_IMPORTER=ON \
+  -DASSIMP_BUILD_ZLIB=ON \
+  -DASSIMP_LIBRARY_SUFFIX="" \
+  -DASSIMP_INJECT_DEBUG_POSTFIX=OFF \
+  -DBUILD_SHARED_LIBS=ON \
+  -DCMAKE_DEBUG_POSTFIX=""
+
+cmake --build $ScriptDir/temp/assimp-5.4.3/build
+
+cp -r $ScriptDir/temp/assimp-5.4.3/include/ $ScriptDir/../include
+cp -r $ScriptDir/temp/assimp-5.4.3/build/include/ $ScriptDir/../include
+find $ScriptDir/temp/assimp-5.4.3/build \( -name '*.lib' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs \;
+find $ScriptDir/temp/assimp-5.4.3/build \( -name '*.pdb' -o -name '*.a' \) -type f -exec cp '{}' $ScriptDir/../bins \;
+
+echo -e "\n============================================================================"
+echo -e "Finish Building Assimp"
+echo -e "============================================================================\n"
 
 echo -e "\n============================================================================"
 echo -e "Start Building GLFW"
@@ -71,6 +103,21 @@ echo -e "=======================================================================
 
 unzip -o $ScriptDir/glm-0.9.9.8.zip -d $ScriptDir/temp > /dev/null
 cp -r $ScriptDir/temp/glm/glm $ScriptDir/../include
+
+echo -e "\n============================================================================"
+echo -e "Unpacking ImGui"
+echo -e "============================================================================\n"
+
+unzip -o $ScriptDir/imgui-1.90.1.zip -d $ScriptDir/temp > /dev/null
+find $ScriptDir/temp/imgui-1.90.1 \( -name '*.c*' -o -name '*.h*' \) -maxdepth 1 -type f -exec cp '{}' $ScriptDir/../include/imgui \;
+cp -r $ScriptDir/temp/imgui-1.90.1/backends $ScriptDir/../include/imgui
+
+echo -e "\n============================================================================"
+echo -e "Unpacking STB"
+echo -e "============================================================================\n"
+
+unzip -o $ScriptDir/stb.zip -d $ScriptDir/temp > /dev/null
+cp $ScriptDir/temp/stb/stb_image.h $ScriptDir/../include/stb/
 
 echo -e "\n============================================================================"
 echo -e "Finished"

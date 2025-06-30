@@ -4,9 +4,42 @@ Write-Output "==================================================================
 
 New-Item -Path "$PSScriptRoot/" -Name "../bins" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../include" -ItemType Directory -Force
+New-Item -Path "$PSScriptRoot/" -Name "../include/imgui" -ItemType Directory -Force
+New-Item -Path "$PSScriptRoot/" -Name "../include/nvapi" -ItemType Directory -Force
+New-Item -Path "$PSScriptRoot/" -Name "../include/stb" -ItemType Directory -Force
 New-Item -Path "$PSScriptRoot/" -Name "../libs" -ItemType Directory -Force
 
 try {
+    Write-Output "`n============================================================================"
+    Write-Output "Start Building Assimp"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/assimp-5.4.3.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+
+    cmake $PSScriptRoot/temp/assimp-5.4.3 -B"$PSScriptRoot/temp/assimp-5.4.3/build" `
+        -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF `
+        -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF `
+        -DASSIMP_BUILD_ASSIMP_TOOLS=OFF `
+        -DASSIMP_BUILD_TESTS=OFF `
+        -DASSIMP_BUILD_FBX_IMPORTER=ON `
+        -DASSIMP_BUILD_OBJ_IMPORTER=ON `
+        -DASSIMP_BUILD_ZLIB=ON `
+        -DASSIMP_LIBRARY_SUFFIX="" `
+        -DASSIMP_INJECT_DEBUG_POSTFIX=OFF `
+        -DBUILD_SHARED_LIBS=ON `
+        -DCMAKE_DEBUG_POSTFIX=""
+
+    cmake --build "$PSScriptRoot/temp/assimp-5.4.3/build"
+
+    Copy-Item -Path "$PSScriptRoot/temp/assimp-5.4.3/include/*" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+    Copy-Item -Path "$PSScriptRoot/temp/assimp-5.4.3/build/include/*" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/assimp-5.4.3/build/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/assimp-5.4.3/build/*" -Include *.pdb,*.dll -Recurse | Copy-Item -Destination "$PSScriptRoot/../bins/" -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Finish Building Assimp"
+    Write-Output "============================================================================`n"
+
     Write-Output "`n============================================================================"
     Write-Output "Start Building GLFW"
     Write-Output "============================================================================`n"
@@ -58,6 +91,29 @@ try {
 
     Expand-Archive "$PSScriptRoot/glm-0.9.9.8.zip" -Force -DestinationPath "$PSScriptRoot/temp"
     Copy-Item -Path "$PSScriptRoot/temp/glm/glm" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Unpacking ImGui"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/imgui-1.90.1.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    Get-ChildItem -Path "$PSScriptRoot/temp/imgui-1.90.1/*" -Include *.c*,*.h* | Copy-Item -Destination "$PSScriptRoot/../include/imgui/" -Force
+    Copy-Item -Path "$PSScriptRoot/temp/imgui-1.90.1/backends/" -Recurse -Destination "$PSScriptRoot/../include/imgui/" -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Unpacking NvAPI"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/NvAPI.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    Get-ChildItem -Path "$PSScriptRoot/temp/nvapi-main/*" -Include *.c*,*.h* | Copy-Item -Destination "$PSScriptRoot/../include/nvapi/" -Force
+    Get-ChildItem -Path "$PSScriptRoot/temp/nvapi-main/amd64/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
+
+    Write-Output "`n============================================================================"
+    Write-Output "Unpacking STB"
+    Write-Output "============================================================================`n"
+
+    Expand-Archive "$PSScriptRoot/stb.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    Copy-Item -Path "$PSScriptRoot/temp/stb/stb_image.h" -Destination "$PSScriptRoot/../include/stb" -Force
 
 } catch {
     $_

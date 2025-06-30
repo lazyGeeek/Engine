@@ -8,7 +8,7 @@ file(
     "${CMAKE_SOURCE_DIR}/src/tools/include/tools/*.inl"
 )
 
-add_library(${ENGINE_TOOLS_PROJECT} SHARED ${ENGINE_TOOLS_CODE_LIST})
+add_library(${ENGINE_TOOLS_PROJECT} STATIC ${ENGINE_TOOLS_CODE_LIST})
 
 target_compile_features(${ENGINE_TOOLS_PROJECT} PRIVATE cxx_std_17)
 target_include_directories(${ENGINE_TOOLS_PROJECT} PRIVATE ${CMAKE_SOURCE_DIR}/src/tools/include)
