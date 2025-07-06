@@ -18,10 +18,10 @@ namespace Engine::Logs
         va_start(args, format);
 
         std::string message = parseArgs(format, args);
-
+        printLog(message, ELogLevel::Debug);
+        
         va_end(args);
 
-        printLog(message, ELogLevel::Debug);
         LogMessageReceived.Invoke(ELogLevel::Debug, message);
     }
 
@@ -30,10 +30,10 @@ namespace Engine::Logs
         va_start(args, format);
 
         std::string message = parseArgs(format, args);
+        printLog(message, ELogLevel::Info);
 
         va_end(args);
 
-        printLog(message, ELogLevel::Info);
         LogMessageReceived.Invoke(ELogLevel::Info, message);
     }
 
@@ -42,32 +42,43 @@ namespace Engine::Logs
         va_start(args, format);
 
         std::string message = parseArgs(format, args);
-
+        printLog(message, ELogLevel::Warning);
+        
         va_end(args);
 
-        printLog(message, ELogLevel::Warning);
         LogMessageReceived.Invoke(ELogLevel::Warning, message);
     }
 
-    void Logger::Error(char const* const format, ...) {
+    void Logger::Error(char const* const format, ...)
+    {
         va_list args;
         va_start(args, format);
 
-        std::string message = parseArgs(format, args);
-
-        va_end(args);
-
+        std::string message = parseArgs(format, args);    
         printLog(message, ELogLevel::Error);
+    
+        va_end(args);
+    
         LogMessageReceived.Invoke(ELogLevel::Error, message);
     }
 
-    std::string Logger::parseArgs(char const* const format, va_list args)
+    std::string Logger::parseArgs(char const* const format, va_list& args)
     {
-        size_t size = vsnprintf(nullptr, 0, format, args);
-        std::string buffer;
-        buffer.resize(size + 1);
-        vsnprintf(&buffer[0], size + 1, format, args);
+        va_list copy;
+        va_copy(copy, args);
 
+        int size = vsnprintf(nullptr, 0, format, copy);
+        
+        if (size <= 0)
+        {
+            va_end(copy);
+            return "";
+        }
+        
+        std::string buffer(size + 1, '\0');
+        vsnprintf(&buffer[0], size + 1, format, args);
+        
+        va_end(copy);
         return buffer;
     }
 

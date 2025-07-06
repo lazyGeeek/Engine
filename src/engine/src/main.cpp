@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
         std::unique_ptr<Engine::Application> app = std::make_unique<Engine::Application>(parentPath);
         if (app) app->Run();
     }
-    catch (std::exception e)
+    catch (std::exception& e)
     {
         LOG_ERROR("EXCEPTION: %s", e.what());
         return -1;

@@ -5,8 +5,11 @@
 #include <memory>
 #include <unordered_map>
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
 #include "settings/window_settings.hpp"
@@ -57,7 +60,7 @@ namespace Engine::Windows
         bool IsResizable()  const { return glfwGetWindowAttrib(m_window, GLFW_RESIZABLE) == GLFW_TRUE; }
         bool IsDecorated()  const { return glfwGetWindowAttrib(m_window, GLFW_DECORATED) == GLFW_TRUE; }
 
-        void SwapBuffers() const { glfwSwapBuffers(m_window); }
+        // void SwapBuffers() const { glfwSwapBuffers(m_window); }
         void PollEvents() const { glfwPollEvents(); }
 
         std::string GetTitle() const { return m_settings.Title; }
@@ -106,7 +109,7 @@ namespace Engine::Windows
         void onMove(glm::i32vec2 pos) { m_settings.Position = pos; }
 
         GLFWwindow* m_window = nullptr;
-        std::unique_ptr< Inputs::InputManager > m_inputManager = nullptr;
+        std::unique_ptr<Inputs::InputManager> m_inputManager = nullptr;
 
         Settings::WindowSettings m_settings;
         bool m_fullscreen = false;

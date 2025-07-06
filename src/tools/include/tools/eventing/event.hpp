@@ -3,6 +3,7 @@
 #define ENGINE_TOOLS_EVENTING_EVENT_HPP_
 
 #include <functional>
+#include <cstdint>
 #include <unordered_map>
 
 namespace Engine::Tools::Eventing

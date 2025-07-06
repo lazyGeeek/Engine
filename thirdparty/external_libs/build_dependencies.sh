@@ -76,25 +76,25 @@ echo -e "\n=====================================================================
 echo -e "Finish Building GLFW"
 echo -e "============================================================================\n"
 
-echo -e "\n============================================================================"
-echo -e "Start Building GLEW"
-echo -e "============================================================================\n"
+# echo -e "\n============================================================================"
+# echo -e "Start Building GLEW"
+# echo -e "============================================================================\n"
 
-unzip -o $ScriptDir/glew-2.2.0.zip -d $ScriptDir/temp > /dev/null
+# unzip -o $ScriptDir/glew-2.2.0.zip -d $ScriptDir/temp > /dev/null
 
-cmake $ScriptDir/temp/glew-2.2.0/build/cmake -B$ScriptDir/temp/glew-2.2.0/new_build \
-    -DBUILD_UTILS=OFF \
-    -DBUILD_SHARED_LIBS=ON
+# cmake $ScriptDir/temp/glew-2.2.0/build/cmake -B$ScriptDir/temp/glew-2.2.0/new_build \
+#     -DBUILD_UTILS=OFF \
+#     -DBUILD_SHARED_LIBS=ON
 
-cmake --build $ScriptDir/temp/glew-2.2.0/new_build --config Release
+# cmake --build $ScriptDir/temp/glew-2.2.0/new_build --config Release
 
-cp -r $ScriptDir/temp/glew-2.2.0/include/ $ScriptDir/../
-cp -r $ScriptDir/temp/glew-2.2.0/new_build/lib/*.so* $ScriptDir/../bins/
-find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.a' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs/ \;
+# cp -r $ScriptDir/temp/glew-2.2.0/include/ $ScriptDir/../
+# cp -r $ScriptDir/temp/glew-2.2.0/new_build/lib/*.so* $ScriptDir/../bins/
+# find $ScriptDir/temp/glew-2.2.0/new_build \( -name '*.a' -o -name '*.dylib' \) -type f -exec cp '{}' $ScriptDir/../libs/ \;
 
-echo -e "\n============================================================================"
-echo -e "Finish Building GLEW"
-echo -e "============================================================================\n"
+# echo -e "\n============================================================================"
+# echo -e "Finish Building GLEW"
+# echo -e "============================================================================\n"
 
 echo -e "\n============================================================================"
 echo -e "Unpacking GLM"

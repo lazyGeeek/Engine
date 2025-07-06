@@ -65,25 +65,25 @@ try {
     Write-Output "Finish Building GLFW"
     Write-Output "============================================================================`n"
 
-    Write-Output "`n============================================================================"
-    Write-Output "Start Building GLEW"
-    Write-Output "============================================================================`n"
+    # Write-Output "`n============================================================================"
+    # Write-Output "Start Building GLEW"
+    # Write-Output "============================================================================`n"
 
-    Expand-Archive "$PSScriptRoot/glew-2.2.0.zip" -Force -DestinationPath "$PSScriptRoot/temp"
+    # Expand-Archive "$PSScriptRoot/glew-2.2.0.zip" -Force -DestinationPath "$PSScriptRoot/temp"
 
-    cmake $PSScriptRoot/temp/glew-2.2.0/build/cmake -B"$PSScriptRoot/temp/glew-2.2.0/new_build" `
-        -DBUILD_UTILS=OFF `
-        -DBUILD_SHARED_LIBS=OFF
+    # cmake $PSScriptRoot/temp/glew-2.2.0/build/cmake -B"$PSScriptRoot/temp/glew-2.2.0/new_build" `
+    #     -DBUILD_UTILS=OFF `
+    #     -DBUILD_SHARED_LIBS=OFF
 
-    cmake --build "$PSScriptRoot/temp/glew-2.2.0/new_build" --config Release
+    # cmake --build "$PSScriptRoot/temp/glew-2.2.0/new_build" --config Release
 
-    Copy-Item -Path "$PSScriptRoot/temp/glew-2.2.0/include/*" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
-    Get-ChildItem -Path "$PSScriptRoot/temp/glew-2.2.0/new_build/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
-    Get-ChildItem -Path "$PSScriptRoot/temp/glew-2.2.0/new_build/*" -Include *.pdb,*.dll -Recurse | Copy-Item -Destination "$PSScriptRoot/../bins/" -Force
+    # Copy-Item -Path "$PSScriptRoot/temp/glew-2.2.0/include/*" -Recurse -Destination "$PSScriptRoot/../include" -Container -Force
+    # Get-ChildItem -Path "$PSScriptRoot/temp/glew-2.2.0/new_build/*" -Include *.lib -Recurse | Copy-Item -Destination "$PSScriptRoot/../libs/" -Force
+    # Get-ChildItem -Path "$PSScriptRoot/temp/glew-2.2.0/new_build/*" -Include *.pdb,*.dll -Recurse | Copy-Item -Destination "$PSScriptRoot/../bins/" -Force
 
-    Write-Output "`n============================================================================"
-    Write-Output "Finish Building GLEW"
-    Write-Output "============================================================================`n"
+    # Write-Output "`n============================================================================"
+    # Write-Output "Finish Building GLEW"
+    # Write-Output "============================================================================`n"
 
     Write-Output "`n============================================================================"
     Write-Output "Unpacking GLM"

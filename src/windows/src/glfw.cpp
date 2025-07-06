@@ -47,19 +47,14 @@ namespace Engine::Windows
         };
 
         glfwSetErrorCallback(errorCallback);
-
-        int initializationCode = glfwInit();
-
-        if (initializationCode == GLFW_FALSE)
+        
+        if (glfwInit() == GLFW_FALSE)
         {
             glfwTerminate();
             throw std::runtime_error("Failed to Init GLFW");
         }
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_SAMPLES, windowSettings.Samples);
 
         GLFWmonitor* selectedMonitor = nullptr;
@@ -94,7 +89,7 @@ namespace Engine::Windows
             SetFullscreen(true);
 
         glfwSetWindowUserPointer(m_window, this);
-        glfwMakeContextCurrent(m_window);
+        // glfwMakeContextCurrent(m_window);
     }
 
     void GLFW::bindKeyCallback() const

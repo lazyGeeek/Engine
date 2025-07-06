@@ -5,12 +5,16 @@ include_directories(${ENGINE_EXTERNAL_INCLUDE_DIR}/windows)
 file(
     GLOB_RECURSE ENGINE_WINDOWS_CODE_LIST
     LIST_DIRECTORIES false
+    "${CMAKE_SOURCE_DIR}/src/tools/src/*.c*"
+    "${CMAKE_SOURCE_DIR}/src/tools/include/tools/*.h*"
+    "${CMAKE_SOURCE_DIR}/src/logs/src/*.c*"
+    "${CMAKE_SOURCE_DIR}/src/logs/include/logs/*.h*"
     "${CMAKE_SOURCE_DIR}/src/windows/src/*.c*"
     "${CMAKE_SOURCE_DIR}/src/windows/include/windows/*.h*"
     "${CMAKE_SOURCE_DIR}/src/windows/include/windows/*.inl"
 )
 
-add_library(${ENGINE_WINDOWS_PROJECT} STATIC ${ENGINE_WINDOWS_CODE_LIST})
+add_library(${ENGINE_WINDOWS_PROJECT} SHARED ${ENGINE_WINDOWS_CODE_LIST})
 
 target_compile_features(${ENGINE_WINDOWS_PROJECT} PRIVATE cxx_std_17)
 target_include_directories(${ENGINE_WINDOWS_PROJECT} PRIVATE 
@@ -19,7 +23,7 @@ target_include_directories(${ENGINE_WINDOWS_PROJECT} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/windows/include
     ${ENGINE_EXTERNAL_INCLUDE_DIR}
 )
-target_link_libraries(${ENGINE_WINDOWS_PROJECT} ${ENGINE_LIBS_LIST} Logs Tools)
+target_link_libraries(${ENGINE_WINDOWS_PROJECT} ${ENGINE_BINS_LIST} vulkan)
 
 foreach(CODE_FILE IN ITEMS ${ENGINE_WINDOWS_CODE_LIST})
     get_filename_component(CODE_FILE_PATH "${CODE_FILE}" PATH)

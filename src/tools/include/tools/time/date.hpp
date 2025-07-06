@@ -42,9 +42,8 @@ namespace Engine::Tools::Time
         static inline tm getTimeInfo()
         {
             std::time_t currentTime = std::time(nullptr);
-            tm timeInfo;
-            localtime_s(&timeInfo, &currentTime);
-            return timeInfo;
+            tm* timeInfo = localtime(&currentTime);
+            return *timeInfo;
         }
     };
 }
