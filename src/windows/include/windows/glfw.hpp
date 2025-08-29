@@ -109,7 +109,7 @@ namespace Engine::Windows
         void onMove(glm::i32vec2 pos) { m_settings.Position = pos; }
 
         GLFWwindow* m_window = nullptr;
-        std::unique_ptr<Inputs::InputManager> m_inputManager = nullptr;
+        std::unique_ptr<Inputs::InputManager> m_inputManager;
 
         Settings::WindowSettings m_settings;
         bool m_fullscreen = false;

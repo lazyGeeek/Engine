@@ -68,6 +68,18 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "any": "cpp",
+        "complex": "cpp",
+        "expected": "cpp",
+        "regex": "cpp",
+        "source_location": "cpp",
+        "future": "cpp",
+        "queue": "cpp",
+        "ranges": "cpp",
+        "stack": "cpp",
+        "stdfloat": "cpp",
+        "text_encoding": "cpp",
+        "valarray": "cpp"
     }
 }

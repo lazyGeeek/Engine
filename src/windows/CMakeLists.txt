@@ -23,7 +23,7 @@ target_include_directories(${ENGINE_WINDOWS_PROJECT} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/windows/include
     ${ENGINE_EXTERNAL_INCLUDE_DIR}
 )
-target_link_libraries(${ENGINE_WINDOWS_PROJECT} ${ENGINE_BINS_LIST} vulkan)
+target_link_libraries(${ENGINE_WINDOWS_PROJECT} ${ENGINE_BINS_LIST})
 
 foreach(CODE_FILE IN ITEMS ${ENGINE_WINDOWS_CODE_LIST})
     get_filename_component(CODE_FILE_PATH "${CODE_FILE}" PATH)

@@ -51,7 +51,7 @@ endforeach ()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/engine)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/logs)
-# add_subdirectory(${CMAKE_SOURCE_DIR}/src/renderer)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/renderer)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/tools)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/ui)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/windows)

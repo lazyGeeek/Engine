@@ -4,7 +4,8 @@ handle_error() {
   rm -rf $ScriptDir/temp
   rm -rf $ScriptDir/../bins
   rm -rf $ScriptDir/../include 
-  rm -rf $ScriptDir/../libs 
+  rm -rf $ScriptDir/../libs
+  rm -rf $ScriptDir/../engine/Shaders
   exit 1
 }
 
@@ -21,6 +22,7 @@ mkdir -p $ScriptDir/../include
 mkdir -p $ScriptDir/../include/imgui
 mkdir -p $ScriptDir/../include/stb
 mkdir -p $ScriptDir/../libs
+mkdir -p $ScriptDir/../engine/Shaders
 
 echo -e "\n============================================================================"
 echo -e "Start Building Assimp"
@@ -50,13 +52,7 @@ find $ScriptDir/temp/assimp-5.4.3/build \( -name '*.a' -o -name '*.dylib' \) -ty
 echo -e "\n============================================================================"
 echo -e "Finish Building Assimp"
 echo -e "============================================================================\n"
-
-echo -e "\n============================================================================"
-echo -e "Start Building GLFW"
-echo -e "============================================================================\n"
-
-unzip -o $ScriptDir/glfw-3.3.8.zip -d $ScriptDir/temp > /dev/null
-
+thirdparty/engine/Shaders
 cmake $ScriptDir/temp/glfw-3.3.8 -B$ScriptDir/temp/glfw-3.3.8/build \
   -DGLFW_BUILD_EXAMPLES=OFF \
   -DGLFW_BUILD_TESTS=OFF \
@@ -117,6 +113,12 @@ echo -e "=======================================================================
 
 unzip -o $ScriptDir/stb.zip -d $ScriptDir/temp > /dev/null
 cp $ScriptDir/temp/stb/stb_image.h $ScriptDir/../include/stb/
+
+echo -e "\n============================================================================"
+echo -e "Building Shaders"
+echo -e "============================================================================"
+
+python3 compile_shaders.py
 
 echo -e "\n============================================================================"
 echo -e "Cleaning"

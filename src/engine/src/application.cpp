@@ -2,7 +2,7 @@
 
 // #include "hardware_info/profiler_panel.hpp"
 // #include "logs/logger_panel.hpp"
-// #include "renderer/driver.hpp"
+#include "renderer/driver.hpp"
 // #include "renderer/view_panel.hpp"
 #include "tools/services/service_locator.hpp"
 #include "tools/time/global_clock.hpp"
@@ -11,14 +11,15 @@
 
 namespace Engine
 {
-    Application::Application(const std::filesystem::path& projectPath)
-        : ProjectPath(projectPath),
-          ProjectShadersPath(projectPath / "Shaders")
+    Application::Application(const std::filesystem::path& projectPath) :
+        ProjectPath(projectPath),
+        ProjectShadersPath(projectPath / "Shaders")
     {
         Tools::Services::ServiceLocator::Provide<Tools::Time::GlobalClock>().Start();
         Windows::Settings::WindowSettings windowSettings;
+        windowSettings.Resizable = true;
         Windows::GLFW& window  = Tools::Services::ServiceLocator::Provide<Windows::GLFW>(windowSettings);
-        // Tools::Services::ServiceLocator::Provide<Renderer::Driver>(true);
+        Tools::Services::ServiceLocator::Provide<Renderer::Driver>(ProjectShadersPath);
         // UI::UIManager& manager = Tools::Services::ServiceLocator::Provide<UI::UIManager>(ProjectPath / "Configs\\ImGui.ini", "#version 460");
         // manager.EnableDocking(true);
         // manager.ApplyStyle(UI::Styling::EStyle::CustomDark);
@@ -29,7 +30,7 @@ namespace Engine
     Application::~Application()
     {
         // Tools::Services::ServiceLocator::UnregisterService<UI::UIManager>();
-        // Tools::Services::ServiceLocator::UnregisterService<Renderer::Driver>();
+        Tools::Services::ServiceLocator::UnregisterService<Renderer::Driver>();
         Tools::Services::ServiceLocator::UnregisterService<Windows::GLFW>();
         Tools::Services::ServiceLocator::UnregisterService<Tools::Time::GlobalClock>();
     }
@@ -38,6 +39,8 @@ namespace Engine
     {
         Windows::GLFW& window = Tools::Services::ServiceLocator::Get<Windows::GLFW>();
         Tools::Time::GlobalClock& clock = Tools::Services::ServiceLocator::Get<Tools::Time::GlobalClock>();
+        Renderer::Driver& driver = Tools::Services::ServiceLocator::Get<Renderer::Driver>();
+        driver.Init();
         // UI::UIManager& uiManager = Tools::Services::ServiceLocator::Get<UI::UIManager>();
 
         // std::shared_ptr<UI::Modules::Canvas> canvas = std::make_shared<UI::Modules::Canvas>();
@@ -57,9 +60,12 @@ namespace Engine
         {
             clock.UpdateDelta();
             window.PollEvents();
+            driver.NewFrame();
             // uiManager.Render();
             // window.SwapBuffers();
         }
+
+        driver.Release();
     }
 
     bool Application::IsRunning() const
