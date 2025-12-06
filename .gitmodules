@@ -1,0 +1,9 @@
+[submodule "Window"]
+	path = Window
+	url = https://github.com/lazyGeeek/Window.git
+[submodule "Utils"]
+	path = Utils
+	url = https://github.com/lazyGeeek/Utils.git
+[submodule "Renderer"]
+	path = Renderer
+	url = https://github.com/lazyGeeek/Renderer.git
