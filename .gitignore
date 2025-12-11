@@ -350,6 +350,7 @@ MigrationBackup/
 .ionide/
 
 # Custom ignore rules
+.vscode
 !thirdparty/**
 thirdparty/bins/
 thirdparty/include/
