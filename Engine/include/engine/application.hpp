@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <memory>
 
-namespace Renderer{ class Device; class Vulkan; }
+namespace Renderer{ class Device; } // class Vulkan; }
 namespace Window { class GLFW; }
 
 namespace Engine
@@ -29,8 +29,8 @@ namespace Engine
 
     private:
         std::unique_ptr<Window::GLFW> m_window = nullptr;
-        std::unique_ptr<Renderer::Device> m_device = nullptr;
-        std::unique_ptr<Renderer::Vulkan> m_renderer = nullptr;
+        std::shared_ptr<Renderer::Device> m_device = nullptr;
+        // std::unique_ptr<Renderer::Vulkan> m_renderer = nullptr;
     };
 }
 
