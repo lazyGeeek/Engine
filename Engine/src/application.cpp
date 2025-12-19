@@ -1,5 +1,5 @@
 #include "engine/application.hpp"
-#include "renderer/device.hpp"
+#include "renderer/vulkan.hpp"
 #include "window/glfw.hpp"
 
 #include <array>
@@ -23,18 +23,19 @@ namespace Engine
         settings.Title = "Engine";
         m_window = std::make_unique<Window::GLFW>(settings);
 
-        m_device = std::make_shared<Renderer::Device>(m_window->GetWindow(), ShaderPath);
+        m_vulkan = std::make_shared<Renderer::Vulkan>(m_window->GetWindow());
+        m_vulkan->Init(ShaderPath);
 
-        m_window->ResizeEvent += [=, this](int32_t with, int32_t height)
+        m_window->ResizeEvent += [&, this](int32_t with, int32_t height)
         {
-            m_device->SetFramebufferResized();
+            m_vulkan->SetFramebufferResized();
         };
     }
 
     Application::~Application()
     {
-        if (m_device)
-            m_device = nullptr;
+        if (m_vulkan)
+            m_vulkan = nullptr;
 
         if (m_window)
             m_window = nullptr;
@@ -46,8 +47,8 @@ namespace Engine
         {
             m_window->PollEvents();
             
-            if (m_device)
-                m_device->DrawFrame();
+            if (m_vulkan)
+                m_vulkan->DrawFrame();
         }
     }
 }
