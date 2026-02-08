@@ -358,3 +358,5 @@ thirdparty/libs/
 thirdparty/external_libs/temp/
 !src/**
 build/
+build_tests/
+bin_tests/

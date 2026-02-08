@@ -13,11 +13,13 @@ add_executable(${ENGINE_PROJECT} ${ENGINE_CODE_LIST})
 target_compile_features(${ENGINE_PROJECT} PRIVATE cxx_std_20)
 target_include_directories(${ENGINE_PROJECT} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    # ${CMAKE_SOURCE_DIR}/UI/include
+    # ${CMAKE_SOURCE_DIR}/UI/thirdparty/include
     ${CMAKE_SOURCE_DIR}/Utils/include
     ${CMAKE_SOURCE_DIR}/Renderer/include
     ${CMAKE_SOURCE_DIR}/Window/include
     ${CMAKE_SOURCE_DIR}/Window/thirdparty/include)
-target_link_libraries(${ENGINE_PROJECT} Utils Renderer Window)
+target_link_libraries(${ENGINE_PROJECT} Utils Renderer Window) # UI
 
 foreach(ENGINE_FILE IN ITEMS ${ENGINE_CODE_LIST})
     get_filename_component(ENGINE_FILE_PATH "${ENGINE_FILE}" PATH)
